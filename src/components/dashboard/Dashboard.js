@@ -18,11 +18,12 @@ import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import axios from 'axios'
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { useAuthUser, useSignOut } from 'react-auth-kit'
 
 
 import {orange,lightBlue,deepPurple, deepOrange} from "@material-ui/core/colors";
@@ -131,6 +132,8 @@ export default function Dashboard() {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
   const palletType = darkState ? "dark" : "light";
+  const signOut = useSignOut()
+  const authUser = useAuthUser()
   const mainPrimaryColor = darkState ? orange[500] : lightBlue[500];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
   const darkTheme = createMuiTheme({
@@ -202,12 +205,18 @@ export default function Dashboard() {
             >
               Панель управления
             </Typography>
+
+            
             <Switch checked={darkState} onChange={handleThemeChange} />
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
+
+            <Typography component="h" variant="h8">
+            {`${authUser().name}`}
+                    </Typography>
+            <IconButton color="inherit" onClick={() => signOut()}>
+              < ExitToAppIcon />
             </IconButton>
+            
+            
           </Toolbar>
         </AppBar>
         <Drawer
@@ -253,7 +262,6 @@ export default function Dashboard() {
                         name="username"
                         autoComplete="username"
                         autoFocus
-                         mask="(0)999 999 99 99" maskChar=" " 
                 
                     />
                     <TextField
