@@ -10,6 +10,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
 const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
@@ -57,25 +58,32 @@ const Login = () => {
         .then((res)=>{
             if(res.status === 200)
            {
+            
         if (signIn({
             token: res.data.token, //Just a random token
             tokenType: 'Bearer',    // Token type set as Bearer
             authState:{ name: 'Admin1' },
             expiresIn: 120  // Token Expriration time, in minutes
-        })) 
+        })) {
         
-        {
+        
             // If Login Successfull, then Redirect the user to secure route
             history.push('/dashboard')
+        }
         } else 
             {
             // Else, there must be some error. So, throw an error
-            alert("Error Occoured. Try Again") 
+            alert("res.data") ;
              }
-
+            
+                 
+            
             }   
-
-            })
+           
+            ).catch(error => {
+                alert('Error ' + error);
+               
+            });
 
  
         
@@ -124,8 +132,9 @@ const Login = () => {
                         name="username"
                         autoComplete="username"
                         autoFocus
-                
                     />
+                   
+
                     <TextField
                         onChange = {(e)=>setFormData({...formData, password: e.target.value})}
                         variant="outlined"
