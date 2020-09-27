@@ -53,31 +53,38 @@ const Login = () => {
         e.preventDefault()
         // Assuming that, all network Request is successfull, and the user is authenticated
         axios.post('https://elepsio.herokuapp.com/auth/login', formData)
+        
         .then((res)=>{
-            if(res.status === 200){
+            if(res.status === 200)
+           {
         if (signIn({
             token: res.data.token, //Just a random token
             tokenType: 'Bearer',    // Token type set as Bearer
-            authState:{ name: 'React User', uid: 123456 },
+            authState:{ name: 'Admin1' },
             expiresIn: 120  // Token Expriration time, in minutes
-        })) {
+        })) 
+        
+        {
             // If Login Successfull, then Redirect the user to secure route
-            history.push('/secure')
-        } else {
+            history.push('/dashboard')
+        } else 
+            {
             // Else, there must be some error. So, throw an error
             alert("Error Occoured. Try Again") 
-        
-            
-        }
-    }
-})
+             }
+
+            }   
+
+            })
+
+ 
         
     }
         
     if (isAuthenticated()) {
         // If authenticated user, then redirect to secure dashboard
         return (
-            <Redirect to={'/secure'} />
+            <Redirect to={'/dashboard'} />
         )
     } else {
         // If not authenticated, use the login flow
