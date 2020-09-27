@@ -24,6 +24,7 @@ import axios from 'axios'
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { useAuthUser, useSignOut } from 'react-auth-kit'
+import MuiPhoneNumber from 'material-ui-phone-number';
 
 
 import {orange,lightBlue,deepPurple, deepOrange} from "@material-ui/core/colors";
@@ -156,7 +157,7 @@ export default function Dashboard() {
     axios.post('https://elepsio.herokuapp.com/auth/register', formData)
     .then((res)=>{
         if(res.status === 200){
-         alert("User added")
+         alert("Пользователь добавлен")
     } else {
         alert("Error Occoured. Try Again")     
     }
@@ -250,20 +251,19 @@ export default function Dashboard() {
                    Регистрация нового пациента
                     </Typography>
 
-                    <TextField
-                        onChange ={(e)=>setFormData({...formData, username: e.target.value})}
-
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="Номер телефона"
-                        name="username"
-                        autoComplete="username"
-                        autoFocus
-                
-                    />
+                                  <MuiPhoneNumber
+                  defaultCountry={'ua'}
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="username"
+                  label="Имя"
+                  name="username"
+                  autoComplete="username"
+                  autoFocus
+                  onChange ={(e)=>setFormData({...formData, username: e})}
+              />
                     <TextField
                         onChange = {(e)=>setFormData({...formData, password: e.target.value})}
 

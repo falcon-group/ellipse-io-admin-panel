@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import MuiPhoneNumber from 'material-ui-phone-number';
 const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
@@ -62,7 +62,7 @@ const Login = () => {
         if (signIn({
             token: res.data.token, //Just a random token
             tokenType: 'Bearer',    // Token type set as Bearer
-            authState:{ name: 'Admin1' },
+            authState:{ name: 'Admin' },
             expiresIn: 120  // Token Expriration time, in minutes
         })) {
         
@@ -81,8 +81,7 @@ const Login = () => {
             }   
            
             ).catch(error => {
-                alert('Error ' + error);
-               
+                alert('Неверные данные \n' + error);               
             });
 
  
@@ -121,18 +120,19 @@ const Login = () => {
                     </Typography>
 
                     <form className={classes.form} onSubmit={loginHandler}>
-                    <TextField
-                        onChange ={(e)=>setFormData({...formData, username: e.target.value})}
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="Имя"
-                        name="username"
-                        autoComplete="username"
-                        autoFocus
-                    />
+                <MuiPhoneNumber
+                    defaultCountry={'ua'}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Имя"
+                    name="username"
+                    autoComplete="username"
+                    autoFocus
+                    onChange ={(e)=>setFormData({...formData, username: e})}
+                />
                    
 
                     <TextField
