@@ -19,6 +19,11 @@ import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import axios from 'axios'
+
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
 
 import {orange,lightBlue,deepPurple, deepOrange} from "@material-ui/core/colors";
 // import Chart from "./Chart";
@@ -117,9 +122,9 @@ const useStyles = makeStyles(theme => ({
     overflow: "auto",
     flexDirection: "column"
   },
-  fixedHeight: {
-    height: 240
-  }
+  // fixedHeight: {
+  //   height: 240
+  // }
 }));
 
 export default function Dashboard() {
@@ -140,6 +145,21 @@ export default function Dashboard() {
     }
   });
   const classes = useStyles();
+  const [formData, setFormData] = React.useState({username: '', password: ''})
+
+  const loginHandler = (e) => {
+    e.preventDefault()
+    // Assuming that, all network Request is successfull, and the user is authenticated
+    axios.post('https://elepsio.herokuapp.com/auth/register', formData)
+    .then((res)=>{
+        if(res.status === 200){
+         alert("User added")
+    } else {
+        alert("Error Occoured. Try Again")     
+    }
+  }
+    )}
+
   const handleThemeChange = () => {
     setDarkState(!darkState);
   };
@@ -207,29 +227,65 @@ export default function Dashboard() {
           <Divider />
           {/* <List>{secondaryListItems}</List> */}
         </Drawer>
+
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
+
             <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
+              <Grid item xs={12} md={8} lg={5}>
                 <Paper className={fixedHeightPaper}>
-                  {/* <Chart /> */}
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper className={fixedHeightPaper}>
-                  {/* <Deposits /> */}
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                  {/* <Orders /> */}
+                <form className={classes.form} onSubmit={loginHandler} >
+
+                <Typography component="h1" variant="h6">
+                   Регистрация нового пациента
+                    </Typography>
+
+                    <TextField
+                        onChange ={(e)=>setFormData({...formData, username: e.target.value})}
+
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="username"
+                        label="Номер телефона"
+                        name="username"
+                        autoComplete="username"
+                        autoFocus
+                         mask="(0)999 999 99 99" maskChar=" " 
+                
+                    />
+                    <TextField
+                        onChange = {(e)=>setFormData({...formData, password: e.target.value})}
+
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Пароль"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+
+                    />
+
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                    >
+                        Регистрация
+                    </Button>
+
+                    </form>
                 </Paper>
               </Grid>
             </Grid>
+            
             <Box pt={4}>
               <Copyright />
             </Box>
