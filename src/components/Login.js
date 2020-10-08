@@ -1,16 +1,12 @@
+
 import React from 'react'
 import axios from 'axios'
 import { useIsAuthenticated, useSignIn } from 'react-auth-kit'
 import { Redirect, useHistory } from 'react-router-dom'
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import MuiPhoneNumber from 'material-ui-phone-number';
+import  LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import {Avatar, Button,CssBaseline,TextField,Typography,makeStyles,Container,} from '@material-ui/core'
+
 const useStyles = makeStyles((theme) => ({
     paper: {
       marginTop: theme.spacing(8),
@@ -31,24 +27,16 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
   
-
-
-
 const Login = () => {
+    
     const isAuthenticated = useIsAuthenticated()
     const signIn = useSignIn()
     const history = useHistory()
     const classes = useStyles();
-    /**
-     * Login Handle, the callback function onClick from the "Login" button
-     * 
-     * This function demostrate a dummy authentication, using useSignIn function
-     */
+    
 
     const [formData, setFormData] = React.useState({username: '', password: ''})
 
-    // const [formUserName, setUserName] = React.useState({username: ''})
-    // const [formPassword, setPassword] = React.useState({ password: ''})
     
     const loginHandler = (e) => {
         e.preventDefault()
@@ -83,29 +71,16 @@ const Login = () => {
             ).catch(error => {
                 alert('Неверные данные \n' + error);               
             });
-
- 
-        
+   
     }
         
     if (isAuthenticated()) {
-        // If authenticated user, then redirect to secure dashboard
+        // If authenticated user, then redirect to  dashboard
         return (
             <Redirect to={'/dashboard'} />
         )
     } else {
-        // If not authenticated, use the login flow
-        // For Demostration, I'm using just a button to login.
-        // In reality, there should be a form, validation, nwetowrk request and other things
         return (
-            // <form onSubmit={loginHandler}>
-
-            //     <input type={"text"} onChange={(e)=>setFormData({...formData, username: e.target.value})}/>
-            //     <input type={"password"} onChange={(e)=>setFormData({...formData, password: e.target.value})}/>
-    
-            //     <button>Submit</button>
-            // </form>
-
 
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />

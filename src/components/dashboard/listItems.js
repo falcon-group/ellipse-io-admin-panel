@@ -1,4 +1,6 @@
 import React from "react";
+import {Link} from 'react-router-dom';
+
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -21,7 +23,9 @@ export const mainListItems = (
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
+      <Link to="/users">
       <ListItemText primary="Пациенты" />
+      </Link>
     </ListItem>
 
     <ListItem button>

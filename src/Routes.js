@@ -1,10 +1,10 @@
 import React from 'react'
 import { PrivateRoute } from 'react-auth-kit'
 import { BrowserRouter, Route, Switch,Redirect} from 'react-router-dom'
-import Home from './components/Home'
 import Login from './components/Login'
-import SecureComponent from './components/SecureComponent'
 import Dashboard from './components/dashboard/Dashboard'
+import UsersList from './components/dashboard/UsersList'
+
 const Routes = () => {
     return (
         <BrowserRouter>
@@ -13,11 +13,9 @@ const Routes = () => {
                     <Redirect to="/login" />
                 </Route>
 
-                {/* <Route path={'/'} component={Home} exact/> */}
                 <Route path={'/login' } component={Login} exact/>
-                {/* <Route path={'/dashboard' } component={Dashboard} exact/> */}
-                {/* <PrivateRoute path={'/secure'} component={SecureComponent} loginPath={'/login'} exact/> */}
                 <PrivateRoute path={'/dashboard'} component={Dashboard} loginPath={'/login'} exact/>
+                <PrivateRoute path={'/users'} component={UsersList} loginPath={'/login'} exact/>
 
             </Switch>
         </BrowserRouter>

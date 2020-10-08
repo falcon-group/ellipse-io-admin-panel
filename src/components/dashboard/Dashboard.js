@@ -1,37 +1,22 @@
+
 import React, { useState } from "react";
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Switch from "@material-ui/core/Switch";
-import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
+import axios from 'axios'
+//Auth Kit
+import { useAuthUser, useSignOut } from 'react-auth-kit'
+//Library for mask phone number
+import MuiPhoneNumber from 'material-ui-phone-number';
+//Core MaterialUi
+import { makeStyles,CssBaseline,Switch,Drawer,Box,AppBar,Toolbar,List,
+         Typography,Divider,IconButton,Container,Grid,Paper,Link,TextField,Button,} from "@material-ui/core";
+//Icons
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import axios from 'axios'
-
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { useAuthUser, useSignOut } from 'react-auth-kit'
-import MuiPhoneNumber from 'material-ui-phone-number';
-
-
+//Colors
 import {orange,lightBlue,deepPurple, deepOrange} from "@material-ui/core/colors";
-// import Chart from "./Chart";
-// import Deposits from "./Deposits";
-// import Orders from "./Orders";
-import { mainListItems, secondaryListItems } from "./listItems";
+//Components
+import { mainListItems } from "./listItems";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
