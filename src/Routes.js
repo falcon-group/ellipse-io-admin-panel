@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch,Redirect} from 'react-router-dom'
 import Login from './components/Login'
 import Dashboard from './components/dashboard/Dashboard'
 import UsersList from './components/dashboard/UsersList'
+import AddUser from './components/dashboard/AddUser'
 
 const Routes = () => {
     return (
@@ -16,6 +17,7 @@ const Routes = () => {
                 <Route path={'/login' } component={Login} exact/>
                 <PrivateRoute path={'/dashboard'} component={Dashboard} loginPath={'/login'} exact/>
                 <PrivateRoute path={'/users'} component={UsersList} loginPath={'/login'} exact/>
+                <PrivateRoute path={'/add-user'} component={AddUser} loginPath={'/login'} exact/>
 
             </Switch>
         </BrowserRouter>
