@@ -230,51 +230,7 @@ export default function Dashboard() {
             <Grid container spacing={3}>
               <Grid item xs={12} md={8} lg={5}>
                 <Paper className={fixedHeightPaper}>
-                <form className={classes.form} onSubmit={loginHandler} >
-
-                <Typography component="h1" variant="h6">
-                   Регистрация нового пациента
-                    </Typography>
-
-                                  <MuiPhoneNumber
-                  defaultCountry={'ua'}
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Имя"
-                  name="username"
-                  autoComplete="username"
-                  autoFocus
-                  onChange ={(e)=>setFormData({...formData, username: e})}
-              />
-                    <TextField
-                        onChange = {(e)=>setFormData({...formData, password: e.target.value})}
-
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Пароль"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-
-                    />
-
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Регистрация
-                    </Button>
-
-                    </form>
+                    Home
                 </Paper>
               </Grid>
             </Grid>
