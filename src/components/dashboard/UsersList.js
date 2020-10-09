@@ -247,13 +247,18 @@ export default function Dashboard() {
 
                 <Divider />
                 <List component="nav" aria-label="secondary mailbox folders">
-                  <ListItem button>
-                    <ListItemText primary="JecsoPidor" />
-                  </ListItem>
-        <ListItemLink href="#simple-list">
-          <ListItemText primary="Spam" />
-        </ListItemLink>
-      </List>
+
+
+                  <ListItemLink href="/notes-user">
+                  <ListItemText primary="Active User#24 Click" />
+                  </ListItemLink>
+
+                <ListItemLink href="#simple-list">
+                  <ListItemText primary="Test" />
+                  </ListItemLink>
+
+                 </List>
+
                 </Paper>
               </Grid>
             </Grid>
