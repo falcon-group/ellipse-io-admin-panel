@@ -5,6 +5,8 @@ import Login from './components/Login'
 import Dashboard from './components/dashboard/Dashboard'
 import UsersList from './components/dashboard/UsersList'
 import AddUser from './components/dashboard/AddUser'
+import NotesUser from './components/dashboard/NotesUser'
+
 
 const Routes = () => {
     return (
@@ -18,6 +20,8 @@ const Routes = () => {
                 <PrivateRoute path={'/dashboard'} component={Dashboard} loginPath={'/login'} exact/>
                 <PrivateRoute path={'/users'} component={UsersList} loginPath={'/login'} exact/>
                 <PrivateRoute path={'/add-user'} component={AddUser} loginPath={'/login'} exact/>
+                <PrivateRoute path={'/notes-user'} component={NotesUser} loginPath={'/login'} exact/>
+
 
             </Switch>
         </BrowserRouter>
