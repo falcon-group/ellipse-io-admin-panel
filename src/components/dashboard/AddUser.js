@@ -138,6 +138,7 @@ export default function AddUser() {
 
   const loginHandler = (e) => {
     e.preventDefault()
+    formData.username = formData.username.replace(/[^0-9]/g, '');
     // Assuming that, all network Request is successfull, and the user is authenticated
     axios.post('https://elepsio.herokuapp.com/auth/register', formData)
     .then((res)=>{

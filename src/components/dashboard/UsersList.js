@@ -1,28 +1,47 @@
-
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import clsx from "clsx";
-import axios from 'axios'
+import axios from "axios";
 //Auth Kit
-import { useAuthUser, useSignOut } from 'react-auth-kit'
-//Library for mask phone number
-import MuiPhoneNumber from 'material-ui-phone-number';
+import { useAuthUser, useSignOut } from "react-auth-kit";
 //Core MaterialUi
-import { makeStyles,CssBaseline,Switch,Drawer,Box,AppBar,Toolbar,List,
-         Typography,Divider,IconButton,Container,Grid,Paper,Link,TextField,Button,ListItem,ListItemText} from "@material-ui/core";
+import {
+  makeStyles,
+  CssBaseline,
+  Switch,
+  Drawer,
+  Box,
+  AppBar,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  IconButton,
+  Container,
+  Grid,
+  Paper,
+  Link,
+  TextField,
+  Button,
+  ListItem,
+  ListItemText,
+} from "@material-ui/core";
 //Icons
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 //Colors
-import {orange,lightBlue,deepPurple, deepOrange} from "@material-ui/core/colors";
+import {
+  orange,
+  lightBlue,
+  deepPurple,
+  deepOrange,
+} from "@material-ui/core/colors";
 //Components
 import { mainListItems } from "./listItems";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-
-
-
-
+import Cookies from "js-cookie";
+import { useEffect } from "react";
 
 function Copyright() {
   return (
@@ -39,44 +58,44 @@ function Copyright() {
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   toolbar: {
-    paddingRight: 24 // keep right padding when drawer closed
+    paddingRight: 24, // keep right padding when drawer closed
   },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
 
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
   },
   menuButtonHidden: {
-    display: "none"
+    display: "none",
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   drawerPaper: {
     position: "relative",
@@ -84,49 +103,74 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   drawerPaperClose: {
     overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9)
-    }
+      width: theme.spacing(9),
+    },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   paper: {
     padding: theme.spacing(2),
     display: "flex",
     overflow: "auto",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   // fixedHeight: {
   //   height: 240
   // }
-
-  
 }));
+
+const authToken = Cookies.get("_auth_t");
+axios.interceptors.request.use((config) => {
+  config.headers.authorization = `Bearer ${authToken}`;
+  return config;
+});
 
 export default function Dashboard() {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
   const palletType = darkState ? "dark" : "light";
-  const signOut = useSignOut()
-  const authUser = useAuthUser()
+  const signOut = useSignOut();
+  const authUser = useAuthUser();
+
+  const [users, setUsers] = React.useState([]);
+  const [requestError, setRequestError] = React.useState();
+
+  //Use effect for call fetchData
+  useEffect(() => {
+    fetchData();
+  }, [1]);
+
+  //Fetch list-users
+  const fetchData = React.useCallback(async () => {
+    try {
+      const result = await axios.get(
+        `https://elepsio.herokuapp.com/admin/users?offset=0&count=5&query=34&orderBy=asc`
+      );
+      // console.log(result);
+      setUsers(result.data.docs);
+    } catch (err) {
+      setRequestError(err.message);
+    }
+  });
 
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -137,28 +181,14 @@ export default function Dashboard() {
     palette: {
       type: palletType,
       primary: {
-        main: mainPrimaryColor
+        main: mainPrimaryColor,
       },
       secondary: {
-        main: mainSecondaryColor
-      }
-    }
+        main: mainSecondaryColor,
+      },
+    },
   });
   const classes = useStyles();
-  const [formData, setFormData] = React.useState({username: '', password: ''})
-
-  const loginHandler = (e) => {
-    e.preventDefault()
-    // Assuming that, all network Request is successfull, and the user is authenticated
-    axios.post('https://elepsio.herokuapp.com/auth/register', formData)
-    .then((res)=>{
-        if(res.status === 200){
-         alert("Пользователь добавлен")
-    } else {
-        alert("Error Occoured. Try Again")     
-    }
-  }
-    )}
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
@@ -203,23 +233,20 @@ export default function Dashboard() {
               Панель управления
             </Typography>
 
-            
             <Switch checked={darkState} onChange={handleThemeChange} />
 
             <Typography component="h" variant="h8">
-            {`${authUser().name}`}
-                    </Typography>
+              {`${authUser().name}`}
+            </Typography>
             <IconButton color="inherit" onClick={() => signOut()}>
-              < ExitToAppIcon />
+              <ExitToAppIcon />
             </IconButton>
-            
-            
           </Toolbar>
         </AppBar>
         <Drawer
           variant="permanent"
           classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose)
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
           }}
           open={open}
         >
@@ -231,38 +258,50 @@ export default function Dashboard() {
           <Divider />
           <List>{mainListItems}</List>
           <Divider />
-          {/* <List>{secondaryListItems}</List> */}
         </Drawer>
 
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
-              <Button size="medium" variant="contained" color="primary" href="/add-user">
-                Добавить 
-              </Button>
+            <Button
+              size="medium"
+              variant="contained"
+              color="primary"
+              href="/add-user "
+              style={{ marginBottom: "20px" }}
+            >
+              Добавить
+            </Button>
             <Grid container spacing={3}>
-              
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper}>
+                  <Typography
+                    component="p"
+                    variant="h6"
+                    color="secondary"
+                    noWrap
+                  >
+                    Cписок пациентов
+                  </Typography>
 
-                <Divider />
-                <List component="nav" aria-label="secondary mailbox folders">
-
-
-                  <ListItemLink href="/notes-user">
-                  <ListItemText primary="Active User#24 Click" />
-                  </ListItemLink>
-
-                <ListItemLink href="#simple-list">
-                  <ListItemText primary="Test" />
-                  </ListItemLink>
-
-                 </List>
-
+                  <Divider />
+                  <List>
+                    {users?.map((user) => {
+                      return (
+                        <ListItemLink href="/notes-user">
+                          
+                          <ListItemText
+                            key={user._id}
+                            primary={user.username}
+                          />
+                        </ListItemLink>
+                      );
+                    })}
+                  </List>
                 </Paper>
               </Grid>
             </Grid>
-            
+
             <Box pt={4}>
               <Copyright />
             </Box>

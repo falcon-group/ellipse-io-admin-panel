@@ -40,14 +40,16 @@ const Login = () => {
     
     const loginHandler = (e) => {
         e.preventDefault()
+        formData.username = formData.username.replace(/[^0-9]/g, '');
         // Assuming that, all network Request is successfull, and the user is authenticated
-        axios.post('https://elepsio.herokuapp.com/auth/login', formData)
+        axios.post('https://elepsio.herokuapp.com/admin/login', formData)
         
         .then((res)=>{
             if(res.status === 200)
            {
             
         if (signIn({
+           
             token: res.data.token, //Just a random token
             tokenType: 'Bearer',    // Token type set as Bearer
             authState:{ name: 'Admin' },

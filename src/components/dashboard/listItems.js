@@ -23,7 +23,7 @@ export const mainListItems = (
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <Link to="/users" style={{ textDecoration: 'none' ,color: 'black'  }} >
+      <Link to="/users" style={{ textDecoration: 'none'  }} >
       <ListItemText primary="Пациенты"  />
       </Link>
     </ListItem>

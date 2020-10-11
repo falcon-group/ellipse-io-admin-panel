@@ -1,25 +1,45 @@
-
 import React, { useState } from "react";
 import clsx from "clsx";
-import axios from 'axios'
+import axios from "axios";
 //Auth Kit
-import { useAuthUser, useSignOut } from 'react-auth-kit'
-//Library for mask phone number
-import MuiPhoneNumber from 'material-ui-phone-number';
+import { useAuthUser, useSignOut } from "react-auth-kit";
+
 //Core MaterialUi
-import { makeStyles,CssBaseline,Switch,Drawer,Box,AppBar,Toolbar,List,
-         Typography,Divider,IconButton,Container,Grid,Paper,Link,TextField,Button,} from "@material-ui/core";
+import {
+  makeStyles,
+  CssBaseline,
+  Switch,
+  Drawer,
+  Box,
+  AppBar,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  IconButton,
+  Container,
+  Grid,
+  Paper,
+  Link,
+  TextField,
+  Button,
+} from "@material-ui/core";
 //Icons
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 //Colors
-import {orange,lightBlue,deepPurple, deepOrange} from "@material-ui/core/colors";
+import {
+  orange,
+  lightBlue,
+  deepPurple,
+  deepOrange,
+} from "@material-ui/core/colors";
 //Components
 import { mainListItems } from "./listItems";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-
+import { useEffect } from "react";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -39,43 +59,43 @@ function Copyright() {
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   toolbar: {
-    paddingRight: 24 // keep right padding when drawer closed
+    paddingRight: 24, // keep right padding when drawer closed
   },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
   },
   menuButtonHidden: {
-    display: "none"
+    display: "none",
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   drawerPaper: {
     position: "relative",
@@ -83,35 +103,35 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   drawerPaperClose: {
     overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9)
-    }
+      width: theme.spacing(9),
+    },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   paper: {
     padding: theme.spacing(2),
     display: "flex",
     overflow: "auto",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   // fixedHeight: {
   //   height: 240
@@ -122,41 +142,47 @@ export default function NotesUser() {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
   const palletType = darkState ? "dark" : "light";
-  const signOut = useSignOut()
-  const authUser = useAuthUser()
+  const signOut = useSignOut();
+  const authUser = useAuthUser();
   const mainPrimaryColor = darkState ? orange[500] : lightBlue[500];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
   const darkTheme = createMuiTheme({
     palette: {
       type: palletType,
       primary: {
-        main: mainPrimaryColor
+        main: mainPrimaryColor,
       },
       secondary: {
-        main: mainSecondaryColor
-      }
-    }
+        main: mainSecondaryColor,
+      },
+    },
   });
   const classes = useStyles();
-  const [formData, setFormData] = React.useState({username: '', password: ''})
 
-  const loginHandler = (e) => {
-    e.preventDefault()
-    // Assuming that, all network Request is successfull, and the user is authenticated
-    axios.post('https://elepsio.herokuapp.com/auth/register', formData)
-    .then((res)=>{
-        if(res.status === 200){
-         alert("Пользователь добавлен")
-    } else {
-        alert("Error Occoured. Try Again")     
+  const [users, setUsers] = React.useState([]);
+  const [requestError, setRequestError] = React.useState();
+
+  //Use effect for call fetchData
+  useEffect(() => {
+    fetchData();
+  }, [1]);
+
+  //Fetch list-users
+  const fetchData = React.useCallback(async () => {
+    try {
+      const result = await axios.get(
+        `https://elepsio.herokuapp.com/admin/users/5f6f3e26159e920017bed3ea?offset=0&count=2&query=34&orderBy=asc`
+      );
+      // console.log(result);
+      setUsers(result.data);
+    } catch (err) {
+      setRequestError(err.message);
     }
-  }
-    )}
+  });
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
   };
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -196,23 +222,20 @@ export default function NotesUser() {
               Панель управления
             </Typography>
 
-            
             <Switch checked={darkState} onChange={handleThemeChange} />
 
             <Typography component="h" variant="h8">
-            {`${authUser().name}`}
-                    </Typography>
+              {`${authUser().name}`}
+            </Typography>
             <IconButton color="inherit" onClick={() => signOut()}>
-              < ExitToAppIcon />
+              <ExitToAppIcon />
             </IconButton>
-            
-            
           </Toolbar>
         </AppBar>
         <Drawer
           variant="permanent"
           classes={{
-            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose)
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
           }}
           open={open}
         >
@@ -224,50 +247,52 @@ export default function NotesUser() {
           <Divider />
           <List>{mainListItems}</List>
           <Divider />
-          {/* <List>{secondaryListItems}</List> */}
         </Drawer>
 
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
-
             <Grid container spacing={3}>
               <Grid item xs={12} md={8} lg={5}>
                 <Paper className={fixedHeightPaper}>
-                <Card>
-                    <CardContent>
-                        <Typography
-                        className={classes.title}
-                        color="textSecondary"
-                        gutterBottom
-                        >
-                        Дата создания:
-                        </Typography>
-                        <Typography
-                        className={classes.title}
-                        color="textSecondary"
-                        gutterBottom
-                        >
-                        Обновлено:
-                        </Typography>
+                  {users?.map((user) => {
+                    return (
+                      <Card style={{ marginBottom: "20px" }}>
+                        <CardContent>
+                          <Typography
+                            className={classes.title}
+                            color="textSecondary"
+                            gutterBottom
+                          >
+                            Дата создания: {user.createDate}
+                          </Typography>
+                          <Typography
+                            className={classes.title}
+                            color="textSecondary"
+                            gutterBottom
+                          >
+                            Обновлено: {user.updateDate}
+                          </Typography>
 
-                        <Typography variant="h5" component="h2">
-                        Приступ
-                        </Typography>
+                          <Typography variant="h5" component="h2">
+                            {user.title}
+                          </Typography>
 
-                        <Typography variant="body2" color="textSecondary" component="p">
-                        This impressive paella is a perfect party dish and a fun meal to cook
-                        together with your guests. Add 1 cup of frozen peas along with the
-                        mussels, if you like.
-                        </Typography>
-                    </CardContent>
-                    </Card>
-
-                    
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                          >
+                            {user.content}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
                 </Paper>
               </Grid>
             </Grid>
-            
+
             <Box pt={4}>
               <Copyright />
             </Box>
