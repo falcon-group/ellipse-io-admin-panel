@@ -42,6 +42,7 @@ import { mainListItems } from "./listItems";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
+import { Link as RouteLink}  from 'react-router-dom';
 
 function Copyright() {
   return (
@@ -157,7 +158,7 @@ export default function Dashboard() {
   //Use effect for call fetchData
   useEffect(() => {
     fetchData();
-  }, [1]);
+  }, [2]);
 
   //Fetch list-users
   const fetchData = React.useCallback(async () => {
@@ -287,17 +288,25 @@ export default function Dashboard() {
                   <Divider />
                   <List>
                     {users?.map((user) => {
+                      let url = `/notes-user/${user._id}`;
                       return (
-                        <ListItemLink href="/notes-user">
+                         <RouteLink to= {url} style={{ textDecoration: 'none',color:'inherit' }} >
+                        <ListItemLink >
                           
                           <ListItemText
                             key={user._id}
                             primary={user.username}
                           />
                         </ListItemLink>
+                        </RouteLink>
                       );
                     })}
+
                   </List>
+
+                 
+
+                  
                 </Paper>
               </Grid>
             </Grid>
