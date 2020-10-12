@@ -52,7 +52,7 @@ const Login = () => {
            
             token: res.data.token, //Just a random token
             tokenType: 'Bearer',    // Token type set as Bearer
-            authState:{ name: 'Admin' },
+            authState:{ name: formData.username },
             expiresIn: 120  // Token Expriration time, in minutes
         })) {
         
