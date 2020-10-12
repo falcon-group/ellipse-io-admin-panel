@@ -20,7 +20,7 @@ const Routes = () => {
                 <PrivateRoute path={'/dashboard'} component={Dashboard} loginPath={'/login'} exact/>
                 <PrivateRoute path={'/users'} component={UsersList} loginPath={'/login'} exact/>
                 <PrivateRoute path={'/add-user'} component={AddUser} loginPath={'/login'} exact/>
-                <PrivateRoute path={'/notes-user'} component={NotesUser} loginPath={'/login'} exact/>
+                <PrivateRoute path={'/notes-user/:id'} component={NotesUser} loginPath={'/login'} exact/>
 
 
             </Switch>
