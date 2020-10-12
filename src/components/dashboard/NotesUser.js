@@ -138,7 +138,7 @@ const useStyles = makeStyles((theme) => ({
   // }
 }));
 
-export default function NotesUser() {
+ const NotesUser = (props)  => {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
   const palletType = darkState ? "dark" : "light";
@@ -167,11 +167,15 @@ export default function NotesUser() {
     fetchData();
   }, [1]);
 
+  // const id = `5f6f3e26159e920017bed3ea`;
+  // const id = this.props.match.params.id;
   //Fetch list-users
   const fetchData = React.useCallback(async () => {
+    const id = props.match.params.id;
     try {
+      
       const result = await axios.get(
-        `https://elepsio.herokuapp.com/admin/users/5f6f3e26159e920017bed3ea?offset=0&count=2&query=34&orderBy=asc`
+        `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=2&query=34&orderBy=asc`
       );
       // console.log(result);
       setUsers(result.data);
@@ -253,8 +257,9 @@ export default function NotesUser() {
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={8} lg={5}>
+              <Grid item xs={12} >
                 <Paper className={fixedHeightPaper}>
+                  
                   {users?.map((user) => {
                     return (
                       <Card style={{ marginBottom: "20px" }}>
@@ -289,6 +294,8 @@ export default function NotesUser() {
                       </Card>
                     );
                   })}
+
+                 
                 </Paper>
               </Grid>
             </Grid>
@@ -302,3 +309,4 @@ export default function NotesUser() {
     </ThemeProvider>
   );
 }
+export default NotesUser;
