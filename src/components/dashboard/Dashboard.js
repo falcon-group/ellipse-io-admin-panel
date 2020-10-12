@@ -227,10 +227,17 @@ export default function Dashboard() {
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
 
-            <Grid container spacing={3}>
+    <Grid container spacing={3}>
               <Grid item xs={12} md={8} lg={5}>
                 <Paper className={fixedHeightPaper}>
-                    Home
+                      <Typography
+                    component="p"
+                    variant="subtitle1"
+                    color="inherit"
+                    noWrap
+                  >
+                    Добро пожаловать в админ-панель !
+                  </Typography> 
                 </Paper>
               </Grid>
             </Grid>
