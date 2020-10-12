@@ -16,14 +16,16 @@ export const mainListItems = (
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
+      <Link to="/dashboard" style={{ textDecoration: 'none',  color:'inherit'}} >
       <ListItemText primary="Главная" />
+      </Link>
     </ListItem>
 
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <Link to="/users" style={{ textDecoration: 'none'  }} >
+      <Link to="/users" style={{ textDecoration: 'none',  color:'inherit'}} >
       <ListItemText primary="Пациенты"  />
       </Link>
     </ListItem>
