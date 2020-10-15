@@ -42,7 +42,7 @@ import { mainListItems } from "./listItems";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
-import { Link as RouteLink}  from 'react-router-dom';
+import { Link as RouteLink } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -59,7 +59,7 @@ function Copyright() {
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
   },
@@ -140,7 +140,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const authToken = Cookies.get("_auth_t");
-axios.interceptors.request.use((config) => {
+axios.interceptors.request.use(config => {
   config.headers.authorization = `Bearer ${authToken}`;
   return config;
 });
@@ -153,25 +153,15 @@ export default function Dashboard() {
   const authUser = useAuthUser();
 
   const [users, setUsers] = React.useState([]);
-  const [requestError, setRequestError] = React.useState();
 
-  //Use effect for call fetchData
   useEffect(() => {
-    fetchData();
-  }, [2]);
-
-  //Fetch list-users
-  const fetchData = React.useCallback(async () => {
-    try {
-      const result = await axios.get(
-        `https://elepsio.herokuapp.com/admin/users?offset=0&count=5&query=34&orderBy=asc`
-      );
-      // console.log(result);
-      setUsers(result.data.docs);
-    } catch (err) {
-      setRequestError(err.message);
-    }
-  });
+    // GET request using axios inside useEffect React hook
+    axios
+      .get(
+        "https://elepsio.herokuapp.com/admin/users?offset=0&count=100&query=34&orderBy=asc"
+      )
+      .then(result => setUsers(result.data.docs));
+  }, []);
 
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
@@ -287,26 +277,23 @@ export default function Dashboard() {
 
                   <Divider />
                   <List>
-                    {users?.map((user) => {
+                    {users?.map(user => {
                       let url = `/notes-user/${user._id}`;
                       return (
-                         <RouteLink to= {url} style={{ textDecoration: 'none',color:'inherit' }} >
-                        <ListItemLink >
-                          
-                          <ListItemText
-                            key={user._id}
-                            primary={user.username}
-                          />
-                        </ListItemLink>
+                        <RouteLink
+                          to={url}
+                          style={{ textDecoration: "none", color: "inherit" }}
+                        >
+                          <ListItemLink>
+                            <ListItemText
+                              key={user._id}
+                              primary={user.username}
+                            />
+                          </ListItemLink>
                         </RouteLink>
                       );
                     })}
-
                   </List>
-
-                 
-
-                  
                 </Paper>
               </Grid>
             </Grid>
