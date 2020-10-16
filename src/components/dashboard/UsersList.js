@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import axios from "axios";
 //Auth Kit
@@ -20,7 +20,6 @@ import {
   Grid,
   Paper,
   Link,
-  TextField,
   Button,
   ListItem,
   ListItemText,
@@ -29,13 +28,10 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+
+import DeleteIcon from "@material-ui/icons/Delete";
 //Colors
-import {
-  orange,
-  lightBlue,
-  deepPurple,
-  deepOrange,
-} from "@material-ui/core/colors";
+import { orange, deepOrange, indigo, red } from "@material-ui/core/colors";
 //Components
 import { mainListItems } from "./listItems";
 // For Switch Theming
@@ -166,8 +162,8 @@ export default function Dashboard() {
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
-  const mainPrimaryColor = darkState ? orange[500] : lightBlue[500];
-  const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
+  const mainPrimaryColor = darkState ? orange[500] : red[700];
+  const mainSecondaryColor = darkState ? deepOrange[900] : indigo[500];
   const darkTheme = createMuiTheme({
     palette: {
       type: palletType,
@@ -269,7 +265,7 @@ export default function Dashboard() {
                   <Typography
                     component="p"
                     variant="h6"
-                    color="secondary"
+                    color="textSecondary"
                     noWrap
                   >
                     Cписок пациентов
@@ -279,6 +275,7 @@ export default function Dashboard() {
                   <List>
                     {users?.map(user => {
                       let url = `/notes-user/${user._id}`;
+                      let del = `/user-delete/${user._id}`;
                       return (
                         <RouteLink
                           to={url}
@@ -289,6 +286,20 @@ export default function Dashboard() {
                               key={user._id}
                               primary={user.username}
                             />
+                            <RouteLink
+                              to={del}
+                              style={{
+                                textDecoration: "none",
+                                color: "inherit",
+                              }}
+                            >
+                              <IconButton
+                                aria-label="delete"
+                                className={classes.margin}
+                              >
+                                <DeleteIcon fontSize="small" />
+                              </IconButton>
+                            </RouteLink>
                           </ListItemLink>
                         </RouteLink>
                       );
