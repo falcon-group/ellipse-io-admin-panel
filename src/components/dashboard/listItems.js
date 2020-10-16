@@ -1,32 +1,21 @@
 import React from "react";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import DashboardIcon from "@material-ui/icons/Dashboard";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import LayersIcon from "@material-ui/icons/Layers";
-
 
 export const mainListItems = (
   <div>
     <ListItem button>
       <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <Link to="/dashboard" style={{ textDecoration: 'none',  color:'inherit'}} >
-      <ListItemText primary="Главная" />
-      </Link>
-    </ListItem>
-
-    <ListItem button>
-      <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <Link to="/users" style={{ textDecoration: 'none',  color:'inherit'}} >
-      <ListItemText primary="Пациенты"  />
+      <Link to="/users" style={{ textDecoration: "none", color: "inherit" }}>
+        <ListItemText primary="Пациенты" />
       </Link>
     </ListItem>
 
@@ -45,4 +34,3 @@ export const mainListItems = (
     </ListItem>
   </div>
 );
-
