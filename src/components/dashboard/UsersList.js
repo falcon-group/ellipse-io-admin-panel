@@ -28,12 +28,17 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-
+import PersonIcon from "@material-ui/icons/Person";
 import DeleteIcon from "@material-ui/icons/Delete";
 //Colors
-import { orange, deepOrange, indigo, red } from "@material-ui/core/colors";
+import {
+  lightBlue,
+  deepOrange,
+  indigo,
+  orange,
+} from "@material-ui/core/colors";
 //Components
-import { mainListItems } from "./listItems";
+import { mainListItems } from "./NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
@@ -135,12 +140,6 @@ const useStyles = makeStyles(theme => ({
   // }
 }));
 
-const authToken = Cookies.get("_auth_t");
-axios.interceptors.request.use(config => {
-  config.headers.authorization = `Bearer ${authToken}`;
-  return config;
-});
-
 export default function Dashboard() {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
@@ -149,6 +148,12 @@ export default function Dashboard() {
   const authUser = useAuthUser();
 
   const [users, setUsers] = React.useState([]);
+
+  const authToken = Cookies.get("_auth_t");
+  axios.interceptors.request.use(config => {
+    config.headers.authorization = `Bearer ${authToken}`;
+    return config;
+  });
 
   useEffect(() => {
     // GET request using axios inside useEffect React hook
@@ -162,7 +167,7 @@ export default function Dashboard() {
   function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
   }
-  const mainPrimaryColor = darkState ? orange[500] : red[700];
+  const mainPrimaryColor = darkState ? orange[500] : lightBlue[800];
   const mainSecondaryColor = darkState ? deepOrange[900] : indigo[500];
   const darkTheme = createMuiTheme({
     palette: {
@@ -221,8 +226,10 @@ export default function Dashboard() {
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
-
-            <Typography component="h" variant="h8">
+            <IconButton color="inherit">
+              <PersonIcon />
+            </IconButton>
+            <Typography component="h" variant="subtitle2">
               {`${authUser().name}`}
             </Typography>
             <IconButton color="inherit" onClick={() => signOut()}>
@@ -265,7 +272,7 @@ export default function Dashboard() {
                   <Typography
                     component="p"
                     variant="h6"
-                    color="textSecondary"
+                    color="textPrimary"
                     noWrap
                   >
                     Cписок пациентов
@@ -275,7 +282,7 @@ export default function Dashboard() {
                   <List>
                     {users?.map(user => {
                       let url = `/notes-user/${user._id}`;
-                      let del = `/user-delete/${user._id}`;
+                      let del = `/delete-user/${user._id}`;
                       return (
                         <RouteLink
                           to={url}
