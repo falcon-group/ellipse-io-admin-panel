@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
+
 //Auth Kit
 import { useAuthUser, useSignOut } from "react-auth-kit";
 //Library for mask phone number
@@ -32,12 +34,12 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 //Colors
 import {
   orange,
-  lightBlue,
   deepPurple,
   deepOrange,
+  lightBlue,
 } from "@material-ui/core/colors";
 //Components
-import { mainListItems } from "./listItems";
+import { mainListItems } from "./NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
@@ -136,12 +138,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AddUser() {
+  const history = useHistory();
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
   const palletType = darkState ? "dark" : "light";
   const signOut = useSignOut();
   const authUser = useAuthUser();
-  const mainPrimaryColor = darkState ? orange[500] : lightBlue[500];
+  const mainPrimaryColor = darkState ? orange[500] : lightBlue[800];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
   const darkTheme = createMuiTheme({
     palette: {
@@ -169,6 +172,7 @@ export default function AddUser() {
       .then(res => {
         if (res.status === 200) {
           alert("Пользователь добавлен");
+          history.push("/users");
         } else {
           alert("Error Occoured. Try Again");
         }
@@ -280,7 +284,7 @@ export default function AddUser() {
                       fullWidth
                       name="password"
                       label="Пароль"
-                      type="password"
+                      type="text"
                       id="password"
                       autoComplete="current-password"
                     />
