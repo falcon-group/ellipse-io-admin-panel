@@ -5,7 +5,7 @@ import Login from "./components/Login";
 import UsersList from "./components/dashboard/UsersList";
 import AddUser from "./components/dashboard/AddUser";
 import NotesUser from "./components/dashboard/NotesUser";
-
+import DeleteUser from "./components/dashboard/DeleteUser";
 const Routes = () => {
   return (
     <BrowserRouter>
@@ -30,6 +30,12 @@ const Routes = () => {
         <PrivateRoute
           path={"/notes-user/:id"}
           component={NotesUser}
+          loginPath={"/login"}
+          exact
+        />
+        <PrivateRoute
+          path={"/delete-user/:id"}
+          component={DeleteUser}
           loginPath={"/login"}
           exact
         />
