@@ -21,13 +21,13 @@ import {
   Grid,
   Paper,
   Link,
-  TextField,
-  Button,
 } from "@material-ui/core";
 //Icons
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PersonIcon from "@material-ui/icons/Person";
+
 //Colors
 import {
   orange,
@@ -36,7 +36,7 @@ import {
   deepOrange,
 } from "@material-ui/core/colors";
 //Components
-import { mainListItems } from "./listItems";
+import { mainListItems } from "./NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { useEffect } from "react";
@@ -59,7 +59,7 @@ function Copyright() {
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
   },
@@ -138,13 +138,13 @@ const useStyles = makeStyles((theme) => ({
   // }
 }));
 
- const NotesUser = (props)  => {
+const NotesUser = props => {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
   const palletType = darkState ? "dark" : "light";
   const signOut = useSignOut();
   const authUser = useAuthUser();
-  const mainPrimaryColor = darkState ? orange[500] : lightBlue[500];
+  const mainPrimaryColor = darkState ? orange[500] : lightBlue[800];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
   const darkTheme = createMuiTheme({
     palette: {
@@ -159,30 +159,17 @@ const useStyles = makeStyles((theme) => ({
   });
   const classes = useStyles();
 
-  const [users, setUsers] = React.useState([]);
-  const [requestError, setRequestError] = React.useState();
-
-  //Use effect for call fetchData
+  const [notes, setNotes] = React.useState([]);
+  const id = props.match.params.id;
   useEffect(() => {
-    fetchData();
-  }, [1]);
+    // GET request using axios inside useEffect React hook
+    axios
 
-  // const id = `5f6f3e26159e920017bed3ea`;
-  // const id = this.props.match.params.id;
-  //Fetch list-users
-  const fetchData = React.useCallback(async () => {
-    const id = props.match.params.id;
-    try {
-      
-      const result = await axios.get(
-        `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=2&query=34&orderBy=asc`
-      );
-      // console.log(result);
-      setUsers(result.data);
-    } catch (err) {
-      setRequestError(err.message);
-    }
-  });
+      .get(
+        `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=100&query=34&orderBy=asc`
+      )
+      .then(result => setNotes(result.data));
+  }, []);
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
@@ -227,8 +214,10 @@ const useStyles = makeStyles((theme) => ({
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
-
-            <Typography component="h" variant="h8">
+            <IconButton color="inherit">
+              <PersonIcon />
+            </IconButton>
+            <Typography component="h" variant="subtitle2">
               {`${authUser().name}`}
             </Typography>
             <IconButton color="inherit" onClick={() => signOut()}>
@@ -257,30 +246,38 @@ const useStyles = makeStyles((theme) => ({
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
-              <Grid item xs={12} >
+              <Grid item xs={12}>
                 <Paper className={fixedHeightPaper}>
-                  
-                  {users?.map((user) => {
+                  <Typography
+                    gutterBottom="true"
+                    component="p"
+                    variant="h6"
+                    color="textPrimary"
+                    noWrap
+                  >
+                    Заметки пациентов
+                  </Typography>
+                  {notes?.map(notes => {
                     return (
-                      <Card style={{ marginBottom: "20px" }}>
+                      <Card key={notes._id} style={{ marginBottom: "20px" }}>
                         <CardContent>
                           <Typography
                             className={classes.title}
                             color="textSecondary"
                             gutterBottom
                           >
-                            Дата создания: {user.createDate}
+                            Дата создания: {notes.createDate}
                           </Typography>
                           <Typography
                             className={classes.title}
                             color="textSecondary"
                             gutterBottom
                           >
-                            Обновлено: {user.updateDate}
+                            Обновлено: {notes.updateDate}
                           </Typography>
 
                           <Typography variant="h5" component="h2">
-                            {user.title}
+                            {notes.title}
                           </Typography>
 
                           <Typography
@@ -288,14 +285,15 @@ const useStyles = makeStyles((theme) => ({
                             color="textSecondary"
                             component="p"
                           >
-                            {user.content}
+                            {notes.content}
                           </Typography>
                         </CardContent>
                       </Card>
                     );
                   })}
 
-                 
+                  {/* {notes.length === 0 && <h1>Заметок нет</h1>} */}
+                  {console.log(notes)}
                 </Paper>
               </Grid>
             </Grid>
@@ -308,5 +306,5 @@ const useStyles = makeStyles((theme) => ({
       </div>
     </ThemeProvider>
   );
-}
+};
 export default NotesUser;
