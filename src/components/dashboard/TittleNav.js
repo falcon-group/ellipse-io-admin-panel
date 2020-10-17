@@ -11,5 +11,5 @@ export default function Title(props) {
 }
 
 Title.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
