@@ -10,27 +10,29 @@ import LayersIcon from "@material-ui/icons/Layers";
 
 export const mainListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <Link to="/users" style={{ textDecoration: "none", color: "inherit" }}>
-        <ListItemText primary="Пациенты" />
-      </Link>
-    </ListItem>
+    <Link to="/users" style={{ textDecoration: "none", color: "inherit" }}>
+      <ListItem button>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
 
-    <ListItem button>
+        <ListItemText primary="Пациенты" />
+      </ListItem>
+    </Link>
+
+    {/* <ListItem button>
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
       <ListItemText primary="Cтатистика" />
-    </ListItem>
-
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Настройки" />
-    </ListItem>
+    </ListItem> */}
+    <Link to="/setting" style={{ textDecoration: "none", color: "inherit" }}>
+      <ListItem button>
+        <ListItemIcon>
+          <LayersIcon />
+        </ListItemIcon>
+        <ListItemText primary="Настройки" />
+      </ListItem>
+    </Link>
   </div>
 );
