@@ -6,6 +6,8 @@ import UsersList from "./components/dashboard/UsersList";
 import AddUser from "./components/dashboard/AddUser";
 import NotesUser from "./components/dashboard/NotesUser";
 import DeleteUser from "./components/dashboard/DeleteUser";
+import UserHealthDashboard from "./components/dashboard/UserHealthDashbord";
+import SettingDashboard from "./components/dashboard/SettingDashboard";
 const Routes = () => {
   return (
     <BrowserRouter>
@@ -36,6 +38,19 @@ const Routes = () => {
         <PrivateRoute
           path={"/delete-user/:id"}
           component={DeleteUser}
+          loginPath={"/login"}
+          exact
+        />
+        <PrivateRoute
+          path={"/user-info"}
+          component={UserHealthDashboard}
+          loginPath={"/login"}
+          exact
+        />
+
+        <PrivateRoute
+          path={"/setting"}
+          component={SettingDashboard}
           loginPath={"/login"}
           exact
         />
