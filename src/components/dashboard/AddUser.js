@@ -219,7 +219,7 @@ export default function AddUser() {
               noWrap
               className={classes.title}
             >
-              Панель управления
+              Добавить нового пациента
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
