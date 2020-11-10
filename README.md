@@ -8,22 +8,22 @@ Dashboard to interact with patient data, built with React, JavaScript and CSS.
 
 Graphics Library
 
--     material-ui/core
--     material-ui/icons
--     material-ui/lab
+- material-ui/core
+- material-ui/icons
+- material-ui/lab
 
 Libraries
 
 - web-socket
--     axios
--     js-cookie
--     material-ui-phone-number
--     react
--     react-auth-kit
--     react-dom
--     react-router-dom
--     react-scripts
--     recharts
+- axios
+- js-cookie
+- material-ui-phone-number
+- react
+- react-auth-kit
+- react-dom
+- react-router-dom
+- react-scripts
+- recharts
 
 ## Installation and Setup Instructions
 
