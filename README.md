@@ -90,3 +90,19 @@ This project is currently under development. Administrators can filter patients 
             DeleteUser.js
             EditCurrentUser.js
 ```
+
+## Components description
+
+| Name                   | Description                                             |
+| ---------------------- | ------------------------------------------------------- |
+| Route.js               | Routing                                                 |
+| Login.js               | Page for authorization                                  |
+| UserList.js            | All Patients Page for                                   |
+| AddUser.js             | Component for adding a new patient                      |
+| EditCurrentUser.js     | Component for editing patient profile                   |
+| DeleteUser.js          | Component for deleting the current patient              |
+| NotesUser.js           | Patient Notes Display Component                         |
+| UserHealthDashboard.js | Current patient page                                    |
+| CharthHealth.js        | Real Time Chart Display Component                       |
+| BarHealth.js           | Component for displaying a block with health indicators |
+| ThemeSwitch.js         | Component for changing theme mode                       |
