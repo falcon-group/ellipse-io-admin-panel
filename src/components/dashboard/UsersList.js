@@ -30,6 +30,8 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+
 //Colors
 import {
   lightBlue,
@@ -38,13 +40,14 @@ import {
   orange,
 } from "@material-ui/core/colors";
 //Components
-import { mainListItems } from "./NavList";
+import { mainListItems } from "../interface/NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { Link as RouteLink } from "react-router-dom";
 
+import HealingIcon from "@material-ui/icons/Healing";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -222,7 +225,7 @@ export default function Dashboard() {
               noWrap
               className={classes.title}
             >
-              Панель управления
+              Пациенты
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
@@ -269,20 +272,12 @@ export default function Dashboard() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper}>
-                  <Typography
-                    component="p"
-                    variant="h6"
-                    color="textPrimary"
-                    noWrap
-                  >
-                    Cписок пациентов
-                  </Typography>
-
-                  <Divider />
                   <List>
                     {users?.map(user => {
                       let url = `/notes-user/${user._id}`;
                       let del = `/delete-user/${user._id}`;
+                      let edit = `/edit-user/${user._id}`;
+
                       return (
                         <RouteLink
                           to={url}
@@ -293,6 +288,37 @@ export default function Dashboard() {
                               key={user._id}
                               primary={user.username}
                             />
+
+                            <RouteLink
+                              to={`/user-info`}
+                              style={{
+                                textDecoration: "none",
+                                color: "inherit",
+                              }}
+                            >
+                              <IconButton
+                                aria-label="heal"
+                                className={classes.margin}
+                              >
+                                <HealingIcon fontSize="small" />
+                              </IconButton>
+                            </RouteLink>
+
+                            <RouteLink
+                              to={edit}
+                              style={{
+                                textDecoration: "none",
+                                color: "inherit",
+                              }}
+                            >
+                              <IconButton
+                                aria-label="edit"
+                                className={classes.margin}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </RouteLink>
+
                             <RouteLink
                               to={del}
                               style={{

@@ -39,7 +39,7 @@ import {
   lightBlue,
 } from "@material-ui/core/colors";
 //Components
-import { mainListItems } from "./NavList";
+import { mainListItems } from "../interface/NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 

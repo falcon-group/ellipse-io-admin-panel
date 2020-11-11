@@ -5,8 +5,8 @@ import { useHistory } from "react-router-dom";
 
 //Auth Kit
 import { useAuthUser, useSignOut } from "react-auth-kit";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Button from "@material-ui/core/Button";
+//Library for mask phone number
+import MuiPhoneNumber from "material-ui-phone-number";
 //Core MaterialUi
 import {
   makeStyles,
@@ -24,26 +24,24 @@ import {
   Grid,
   Paper,
   Link,
+  TextField,
+  Button,
 } from "@material-ui/core";
 //Icons
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import PersonIcon from "@material-ui/icons/Person";
-
 //Colors
 import {
   orange,
-  lightBlue,
   deepPurple,
   deepOrange,
+  lightBlue,
 } from "@material-ui/core/colors";
 //Components
-import { mainListItems } from "./NavList";
+import { mainListItems } from "../interface/NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import DeleteIcon from "@material-ui/icons/Delete";
-import BlockIcon from "@material-ui/icons/Block";
 
 function Copyright() {
   return (
@@ -139,7 +137,7 @@ const useStyles = makeStyles(theme => ({
   // }
 }));
 
-const DeleteUser = props => {
+export default function EditCurrentUser() {
   const history = useHistory();
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
@@ -160,40 +158,33 @@ const DeleteUser = props => {
     },
   });
   const classes = useStyles();
+  const [formData, setFormData] = React.useState({
+    username: "",
+    password: "",
+    birthday: "",
+  });
 
-  const id = props.match.params.id;
-  //   useEffect(() => {
-  //     // GET request using axios inside useEffect React hook
-  //     axios
-
-  //       .get(
-  //         `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=100&query=34&orderBy=asc`
-  //       )
-  //       .then(result => setNotes(result.data));
-  //   }, []);
-
-  const deleteHandler = e => {
+  const loginHandler = e => {
     e.preventDefault();
-    axios
-      .delete(`https://elepsio.herokuapp.com/admin/users/${id}`)
-
-      .then(res => {
-        if (res.status === 200) {
-          alert("Пользователь удален");
-          history.push("/users");
-        } else {
-          // Else, there must be some error. So, throw an error
-          alert("Пользователь не удален");
-        }
-      })
-      .catch(error => {
-        alert("Ошибка \n" + error);
-      });
+    formData.username = formData.username.replace(/[^0-9]/g, "");
+    // Assuming that, all network Request is successfull, and the user is authenticated
+    // axios
+    //   .post("https://elepsio.herokuapp.com/auth/register", formData)
+    //   .then(res => {
+    //     if (res.status === 200) {
+    //       alert("Пользователь добавлен");
+    //       history.push("/users");
+    //     } else {
+    //       alert("Error Occoured. Try Again");
+    //     }
+    //   });
+    console.log(formData);
   };
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
   };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -230,14 +221,12 @@ const DeleteUser = props => {
               noWrap
               className={classes.title}
             >
-              Панель управления
+              Редактировать данные пользвателя
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
-            <IconButton color="inherit">
-              <PersonIcon />
-            </IconButton>
-            <Typography component="h" variant="subtitle2">
+
+            <Typography component="h" variant="h8">
               {`${authUser().name}`}
             </Typography>
             <IconButton color="inherit" onClick={() => signOut()}>
@@ -260,50 +249,77 @@ const DeleteUser = props => {
           <Divider />
           <List>{mainListItems}</List>
           <Divider />
+          {/* <List>{secondaryListItems}</List> */}
         </Drawer>
 
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <Paper className={fixedHeightPaper}>
-                  <Typography
-                    gutterBottom="true"
-                    component="p"
-                    variant="h6"
-                    color="textPrimary"
-                    noWrap
-                  >
-                    Вы уверены что хотите удалить данного пользователя?
-                  </Typography>
-                  <ButtonGroup>
-                    <Box mr={2}>
-                      <Button
-                        onClick={deleteHandler}
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        startIcon={<DeleteIcon />}
-                      >
-                        Удалить
-                      </Button>
-                    </Box>
-                    <Box>
-                      <Button
-                        variant="contained"
-                        color="inherit"
-                        className={classes.button}
-                        startIcon={<BlockIcon />}
-                      >
-                        Отмена
-                      </Button>
-                    </Box>
-                  </ButtonGroup>
+                  <form className={classes.form} onSubmit={loginHandler}>
+                    <Typography component="h1" variant="h6">
+                      Изменить данные пациента
+                    </Typography>
+
+                    <MuiPhoneNumber
+                      defaultCountry={"ua"}
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="username"
+                      label="Имя"
+                      name="username"
+                      autoComplete="username"
+                      autoFocus
+                      onChange={e => setFormData({ ...formData, username: e })}
+                    />
+                    <TextField
+                      onChange={e =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Пароль"
+                      type="text"
+                      id="password"
+                      autoComplete="current-password"
+                      defaultValue="ivanpetrenko2020qE"
+                    />
+                    <TextField
+                      onChange={e =>
+                        setFormData({ ...formData, birthday: e.target.value })
+                      }
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="birthday"
+                      //   label="ФИО"
+                      type="date"
+                      id="birtday"
+                      autoComplete="birthday"
+                      defaultValue="2020-10-09"
+                    />
+
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      className={classes.submit}
+                    >
+                      Внести изменения
+                    </Button>
+                  </form>
                 </Paper>
               </Grid>
             </Grid>
-
             <Box pt={4}>
               <Copyright />
             </Box>
@@ -312,5 +328,4 @@ const DeleteUser = props => {
       </div>
     </ThemeProvider>
   );
-};
-export default DeleteUser;
+}

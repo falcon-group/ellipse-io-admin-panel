@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import Title from "./TittleNav";
+import Title from "../interface/TittleNav";
 // import { useForkRef } from "@material-ui/core";
 class CustomizedLabel extends PureComponent {
   render() {

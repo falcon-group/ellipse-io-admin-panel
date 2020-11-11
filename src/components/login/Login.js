@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Alert from "@material-ui/lab/Alert";
 import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { Redirect, useHistory } from "react-router-dom";
 import MuiPhoneNumber from "material-ui-phone-number";
@@ -12,7 +13,13 @@ import {
   Typography,
   makeStyles,
   Container,
+  IconButton,
+  InputAdornment,
+  Collapse,
 } from "@material-ui/core";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -40,10 +47,27 @@ const Login = () => {
   const history = useHistory();
   const classes = useStyles();
 
+  axios.interceptors.response.use(
+    response => {
+      return response;
+    },
+    error => {
+      if (error.response.status === 401) {
+        setStatusData(true);
+      }
+      return error;
+    }
+  );
+
   const [formData, setFormData] = React.useState({
     username: "",
     password: "",
   });
+
+  const [correctData, setStatusData] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const loginHandler = e => {
     e.preventDefault();
@@ -67,12 +91,13 @@ const Login = () => {
           }
         } else {
           // Else, there must be some error. So, throw an error
-          alert("res.data");
+          console.log(res);
         }
-      })
-      .catch(error => {
-        alert("Неверные данные \n" + error);
       });
+    // .catch(error => {
+    //   // alert("Неверные данные \n" + error);
+    //   setStatusData(false);
+    // });
   };
 
   if (isAuthenticated()) {
@@ -116,10 +141,49 @@ const Login = () => {
               fullWidth
               name="password"
               label="Пароль"
-              type="password"
+              // type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               autoComplete="current-password"
+              InputProps={{
+                // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
+
+            {/* {!correctData ? (
+              <Alert severity="error">Данные не верные</Alert>
+            ) : null} */}
+
+            <Collapse in={correctData}>
+              <Alert
+                severity="error"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setStatusData(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+              >
+                Данные не верные
+              </Alert>
+            </Collapse>
 
             <Button
               type="submit"

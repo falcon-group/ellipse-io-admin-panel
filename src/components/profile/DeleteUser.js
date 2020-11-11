@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
+
 //Auth Kit
 import { useAuthUser, useSignOut } from "react-auth-kit";
-
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Button from "@material-ui/core/Button";
 //Core MaterialUi
 import {
   makeStyles,
@@ -39,10 +42,8 @@ import {
 import { mainListItems } from "../interface/NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { useEffect } from "react";
-
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+import DeleteIcon from "@material-ui/icons/Delete";
+import BlockIcon from "@material-ui/icons/Block";
 
 function Copyright() {
   return (
@@ -138,11 +139,10 @@ const useStyles = makeStyles(theme => ({
   // }
 }));
 
-const NotesUser = props => {
+const DeleteUser = props => {
+  const history = useHistory();
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
-  const [existNotes, setNotesExist] = React.useState(true);
-  const [notes, setNotes] = React.useState([]);
   const palletType = darkState ? "dark" : "light";
   const signOut = useSignOut();
   const authUser = useAuthUser();
@@ -160,34 +160,36 @@ const NotesUser = props => {
     },
   });
   const classes = useStyles();
-  // setTimeout(() => {
-  //   console.log("Hello, World!");
-  // }, 3000);
+
   const id = props.match.params.id;
-  useEffect(() => {
-    // GET request using axios inside useEffect React hook
+  //   useEffect(() => {
+  //     // GET request using axios inside useEffect React hook
+  //     axios
+
+  //       .get(
+  //         `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=100&query=34&orderBy=asc`
+  //       )
+  //       .then(result => setNotes(result.data));
+  //   }, []);
+
+  const deleteHandler = e => {
+    e.preventDefault();
     axios
+      .delete(`https://elepsio.herokuapp.com/admin/users/${id}`)
 
-      .get(
-        `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=100&query=34&orderBy=asc`
-      )
-      .then(result => {
-        //  console.log(result.headers);
-
-        var str = JSON.stringify(result.headers);
-        var first = '{"content-length":"';
-
-        var mySubString = str.substring(
-          str.lastIndexOf(first) + first.length,
-          str.lastIndexOf('","')
-        );
-        if (parseInt(mySubString) === 2) {
-          setNotesExist(false);
+      .then(res => {
+        if (res.status === 200) {
+          alert("Пользователь удален");
+          history.push("/users");
         } else {
-          setNotes(result.data);
+          // Else, there must be some error. So, throw an error
+          alert("Пользователь не удален");
         }
+      })
+      .catch(error => {
+        alert("Ошибка \n" + error);
       });
-  }, []);
+  };
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
@@ -228,7 +230,7 @@ const NotesUser = props => {
               noWrap
               className={classes.title}
             >
-              Заметки пользователя {id}
+              Панель управления
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
@@ -266,47 +268,38 @@ const NotesUser = props => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper}>
-                  {!existNotes ? (
-                    <Typography component="h1" variant="h6">
-                      У данного пациента отсутсвуют заметки
-                    </Typography>
-                  ) : null}
-                  {notes?.map(notes => {
-                    return (
-                      <Card key={notes._id} style={{ marginBottom: "20px" }}>
-                        <CardContent>
-                          <Typography
-                            className={classes.title}
-                            color="textSecondary"
-                            gutterBottom
-                          >
-                            Дата создания: {notes.createDate}
-                          </Typography>
-                          <Typography
-                            className={classes.title}
-                            color="textSecondary"
-                            gutterBottom
-                          >
-                            Обновлено: {notes.updateDate}
-                          </Typography>
-
-                          <Typography variant="h5" component="h2">
-                            {notes.title}
-                          </Typography>
-
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                          >
-                            {notes.content}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                  {/* {notes.length === 0 && <h1>Заметок нет</h1>} */}
-                  {/* {console.log(notes)} */}
+                  <Typography
+                    gutterBottom="true"
+                    component="p"
+                    variant="h6"
+                    color="textPrimary"
+                    noWrap
+                  >
+                    Вы уверены что хотите удалить данного пользователя?
+                  </Typography>
+                  <ButtonGroup>
+                    <Box mr={2}>
+                      <Button
+                        onClick={deleteHandler}
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        startIcon={<DeleteIcon />}
+                      >
+                        Удалить
+                      </Button>
+                    </Box>
+                    <Box>
+                      <Button
+                        variant="contained"
+                        color="inherit"
+                        className={classes.button}
+                        startIcon={<BlockIcon />}
+                      >
+                        Отмена
+                      </Button>
+                    </Box>
+                  </ButtonGroup>
                 </Paper>
               </Grid>
             </Grid>
@@ -320,4 +313,4 @@ const NotesUser = props => {
     </ThemeProvider>
   );
 };
-export default NotesUser;
+export default DeleteUser;

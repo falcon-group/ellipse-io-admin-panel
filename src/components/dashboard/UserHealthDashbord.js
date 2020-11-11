@@ -39,11 +39,8 @@ import {
 import { mainListItems } from "../interface/NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { useEffect } from "react";
-
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-
+import Chart from "./ChartHealth";
+import BarHealth from "./BarHealth";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -133,16 +130,14 @@ const useStyles = makeStyles(theme => ({
     overflow: "auto",
     flexDirection: "column",
   },
-  // fixedHeight: {
-  //   height: 240
-  // }
+  fixedHeight: {
+    height: 240,
+  },
 }));
 
-const NotesUser = props => {
+const UserHealthDashboard = props => {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
-  const [existNotes, setNotesExist] = React.useState(true);
-  const [notes, setNotes] = React.useState([]);
   const palletType = darkState ? "dark" : "light";
   const signOut = useSignOut();
   const authUser = useAuthUser();
@@ -160,34 +155,8 @@ const NotesUser = props => {
     },
   });
   const classes = useStyles();
-  // setTimeout(() => {
-  //   console.log("Hello, World!");
-  // }, 3000);
+
   const id = props.match.params.id;
-  useEffect(() => {
-    // GET request using axios inside useEffect React hook
-    axios
-
-      .get(
-        `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=100&query=34&orderBy=asc`
-      )
-      .then(result => {
-        //  console.log(result.headers);
-
-        var str = JSON.stringify(result.headers);
-        var first = '{"content-length":"';
-
-        var mySubString = str.substring(
-          str.lastIndexOf(first) + first.length,
-          str.lastIndexOf('","')
-        );
-        if (parseInt(mySubString) === 2) {
-          setNotesExist(false);
-        } else {
-          setNotes(result.data);
-        }
-      });
-  }, []);
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
@@ -228,7 +197,7 @@ const NotesUser = props => {
               noWrap
               className={classes.title}
             >
-              Заметки пользователя {id}
+              Состояние пациента
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
@@ -264,49 +233,14 @@ const NotesUser = props => {
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={12} lg={12}>
                 <Paper className={fixedHeightPaper}>
-                  {!existNotes ? (
-                    <Typography component="h1" variant="h6">
-                      У данного пациента отсутсвуют заметки
-                    </Typography>
-                  ) : null}
-                  {notes?.map(notes => {
-                    return (
-                      <Card key={notes._id} style={{ marginBottom: "20px" }}>
-                        <CardContent>
-                          <Typography
-                            className={classes.title}
-                            color="textSecondary"
-                            gutterBottom
-                          >
-                            Дата создания: {notes.createDate}
-                          </Typography>
-                          <Typography
-                            className={classes.title}
-                            color="textSecondary"
-                            gutterBottom
-                          >
-                            Обновлено: {notes.updateDate}
-                          </Typography>
-
-                          <Typography variant="h5" component="h2">
-                            {notes.title}
-                          </Typography>
-
-                          <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                          >
-                            {notes.content}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                  {/* {notes.length === 0 && <h1>Заметок нет</h1>} */}
-                  {/* {console.log(notes)} */}
+                  <Chart />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4} lg={3}>
+                <Paper className={fixedHeightPaper}>
+                  <BarHealth />
                 </Paper>
               </Grid>
             </Grid>
@@ -320,4 +254,4 @@ const NotesUser = props => {
     </ThemeProvider>
   );
 };
-export default NotesUser;
+export default UserHealthDashboard;
