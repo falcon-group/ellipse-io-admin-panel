@@ -1,13 +1,14 @@
 import React from "react";
 import { PrivateRoute } from "react-auth-kit";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import Login from "./components/Login";
+import Login from "./components/login/Login";
 import UsersList from "./components/dashboard/UsersList";
-import AddUser from "./components/dashboard/AddUser";
+import AddUser from "./components/profile/AddUser";
 import NotesUser from "./components/dashboard/NotesUser";
-import DeleteUser from "./components/dashboard/DeleteUser";
+import DeleteUser from "./components/profile/DeleteUser";
 import UserHealthDashboard from "./components/dashboard/UserHealthDashbord";
 import SettingDashboard from "./components/dashboard/SettingDashboard";
+import EditCurrentUser from "./components/profile/EditCurrentUser";
 const Routes = () => {
   return (
     <BrowserRouter>
@@ -51,6 +52,13 @@ const Routes = () => {
         <PrivateRoute
           path={"/setting"}
           component={SettingDashboard}
+          loginPath={"/login"}
+          exact
+        />
+
+        <PrivateRoute
+          path={"/edit-user/:id"}
+          component={EditCurrentUser}
           loginPath={"/login"}
           exact
         />
