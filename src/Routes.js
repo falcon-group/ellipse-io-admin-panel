@@ -43,7 +43,7 @@ const Routes = () => {
           exact
         />
         <PrivateRoute
-          path={"/user-info"}
+          path={"/user-info/:id"}
           component={UserHealthDashboard}
           loginPath={"/login"}
           exact
