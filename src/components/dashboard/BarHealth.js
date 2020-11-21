@@ -6,6 +6,9 @@ import Title from "../interface/TittleNav";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
+
+import { lightBlue } from "@material-ui/core/colors";
+
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -21,24 +24,21 @@ export default function BarHealth() {
   return (
     <React.Fragment>
       <Title>Текущие данные</Title>
-      {/* <Typography component="p" variant="h4">
-        $3,024.00
-      </Typography> */}
+
       <Grid container direction="row" alignItems="center">
-        <FavoriteIcon /> Сердечный ритм : 94
+        <FavoriteIcon style={{ color: lightBlue[700] }} fontSize="large" />{" "}
+        Сердечный ритм : 94
       </Grid>
 
       <Grid container direction="row" alignItems="center">
-        <DirectionsRunIcon /> Пройденные шаги : 7452
+        <DirectionsRunIcon style={{ color: lightBlue[700] }} fontSize="large" />{" "}
+        Пройденные шаги : 7452
       </Grid>
 
       <Grid container direction="row" alignItems="center">
-        <WhatshotIcon /> Сожженые колориии : 234
+        <WhatshotIcon style={{ color: lightBlue[700] }} fontSize="large" />{" "}
+        Сожженые колориии : 234
       </Grid>
-
-      {/* <Typography color="textSecondary" className={classes.depositContext}>
-        on 15 March, 2019
-      </Typography> */}
     </React.Fragment>
   );
 }
