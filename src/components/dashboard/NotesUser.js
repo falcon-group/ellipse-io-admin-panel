@@ -172,19 +172,10 @@ const NotesUser = props => {
         `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=100&query=34&orderBy=asc`
       )
       .then(result => {
-        //  console.log(result.headers);
-
-        var str = JSON.stringify(result.headers);
-        var first = '{"content-length":"';
-
-        var mySubString = str.substring(
-          str.lastIndexOf(first) + first.length,
-          str.lastIndexOf('","')
-        );
-        if (parseInt(mySubString) === 2) {
+        if (result.data.notes.length === 0) {
           setNotesExist(false);
         } else {
-          setNotes(result.data);
+          setNotes(result.data.notes);
         }
       });
   }, []);
