@@ -31,7 +31,10 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
 //Colors
 import {
   lightBlue,
@@ -43,11 +46,9 @@ import {
 import { mainListItems } from "../interface/NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { Link as RouteLink } from "react-router-dom";
-
-import HealingIcon from "@material-ui/icons/Healing";
+import Cookies from "js-cookie";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -266,6 +267,7 @@ export default function Dashboard() {
               color="primary"
               href="/add-user "
               style={{ marginBottom: "20px" }}
+              startIcon={<PersonAddIcon />}
             >
               Добавить
             </Button>
@@ -274,35 +276,26 @@ export default function Dashboard() {
                 <Paper className={fixedHeightPaper}>
                   <List>
                     {users?.map(user => {
-                      let url = `/notes-user/${user._id}`;
+                      let about = `/user-info/${user._id}`;
                       let del = `/delete-user/${user._id}`;
                       let edit = `/edit-user/${user._id}`;
 
                       return (
                         <RouteLink
-                          to={url}
+                          to={about}
                           style={{ textDecoration: "none", color: "inherit" }}
                         >
                           <ListItemLink>
+                            <ListItemAvatar>
+                              <Avatar>
+                                <PersonIcon />
+                              </Avatar>
+                            </ListItemAvatar>
                             <ListItemText
                               key={user._id}
                               primary={user.username}
+                              secondary={user.fio}
                             />
-
-                            <RouteLink
-                              to={`/user-info`}
-                              style={{
-                                textDecoration: "none",
-                                color: "inherit",
-                              }}
-                            >
-                              <IconButton
-                                aria-label="heal"
-                                className={classes.margin}
-                              >
-                                <HealingIcon fontSize="small" />
-                              </IconButton>
-                            </RouteLink>
 
                             <RouteLink
                               to={edit}
