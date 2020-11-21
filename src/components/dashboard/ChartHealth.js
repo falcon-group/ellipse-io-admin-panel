@@ -8,9 +8,9 @@ import {
   Label,
   ResponsiveContainer,
   Tooltip,
+  Treemap,
 } from "recharts";
 import Title from "../interface/TittleNav";
-// import { useForkRef } from "@material-ui/core";
 class CustomizedLabel extends PureComponent {
   render() {
     const { x, y, stroke, value } = this.props;
@@ -26,14 +26,8 @@ export default function Chart() {
   const theme = useTheme();
   const ws = useRef(null);
 
-  const [barData, setBarData] = useState({
-    data: [
-      {
-        pulse: 87,
-        time: "18:02",
-      },
-    ],
-  });
+  const [barData, setBarData] = useState([]);
+
   useEffect(() => {
     ws.current = new WebSocket("wss://elepsio.herokuapp.com/");
     ws.current.onopen = () => console.log("ws opened");
@@ -43,22 +37,26 @@ export default function Chart() {
       ws.current.close();
     };
   }, []);
+
   useEffect(() => {
     if (!ws.current) return;
 
     ws.current.onmessage = function (event) {
-      setBarData({ data: [...barData.data, JSON.parse(event.data)] });
+      let temp = [...barData, JSON.parse(event.data)];
+      if (temp.length > 40) temp = temp.slice(1);
+      setBarData(temp);
     };
   }, [barData]);
 
   console.log(barData);
+
   return (
     <React.Fragment>
       <Title>График</Title>
       <ResponsiveContainer>
         <LineChart
           isAnimationActive="false"
-          data={barData.data}
+          data={barData}
           margin={{
             top: 16,
             right: 16,
@@ -86,6 +84,7 @@ export default function Chart() {
           />
         </LineChart>
       </ResponsiveContainer>
+      {console.log(barData)}
     </React.Fragment>
   );
 }
