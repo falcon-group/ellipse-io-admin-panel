@@ -69,20 +69,24 @@ const Login = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
+  // const downloadHandler = e => {
+  //   e.preventDefault();
+  //   axi
+  // }
   const loginHandler = e => {
     e.preventDefault();
     formData.username = formData.username.replace(/[^0-9]/g, "");
     // Assuming that, all network Request is successfull, and the user is authenticated
     axios
-      .post("https://elepsio.herokuapp.com/admin/login", formData)
+      .post("https://elepsio.herokuapp.com/api/administrator/login", formData)
 
       .then(res => {
         if (res.status === 200) {
           if (
             signIn({
-              token: res.data.token, //Just a random token
+              token: res.data.authorizationToken, //Just a random token
               tokenType: "Bearer", // Token type set as Bearer
-              authState: { name: formData.username },
+              authState: { name: "Admin" },
               expiresIn: 120, // Token Expriration time, in minutes
             })
           ) {
