@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-
+import MuiPhoneNumber from "material-ui-phone-number";
 //Auth Kit
 import { useAuthUser, useSignOut } from "react-auth-kit";
-//Library for mask phone number
-import MuiPhoneNumber from "material-ui-phone-number";
 //Core MaterialUi
 import {
   makeStyles,
@@ -40,6 +38,8 @@ import {
 } from "@material-ui/core/colors";
 //Components
 import { mainListItems } from "../interface/NavList";
+import Cookies from "js-cookie";
+
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
@@ -137,7 +137,7 @@ const useStyles = makeStyles(theme => ({
   // }
 }));
 
-export default function EditCurrentUser() {
+const EditCurentUser = props => {
   const history = useHistory();
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
@@ -159,25 +159,40 @@ export default function EditCurrentUser() {
   });
   const classes = useStyles();
   const [formData, setFormData] = React.useState({
-    username: "",
-    password: "",
-    birthday: "",
+    customId: "",
+    phone: "",
+    password: "qwerty221",
   });
+
+  const [users, setUsers] = React.useState([]);
+  const authToken = Cookies.get("_auth_t");
+  axios.interceptors.request.use(config => {
+    config.headers.authorization = `Bearer ${authToken}`;
+    return config;
+  });
+  const id = props.match.params.id;
+  useEffect(() => {
+    // GET request using axios inside useEffect React hook
+    axios
+      .get(`https://elepsio.herokuapp.com/api/admin/users/${id}`)
+      .then(result => setFormData(result.data));
+    console.log(users);
+  }, []);
 
   const loginHandler = e => {
     e.preventDefault();
-    formData.username = formData.username.replace(/[^0-9]/g, "");
+    formData.phone = formData.phone.replace(/[^0-9]/g, "");
     // Assuming that, all network Request is successfull, and the user is authenticated
-    // axios
-    //   .post("https://elepsio.herokuapp.com/auth/register", formData)
-    //   .then(res => {
-    //     if (res.status === 200) {
-    //       alert("Пользователь добавлен");
-    //       history.push("/users");
-    //     } else {
-    //       alert("Error Occoured. Try Again");
-    //     }
-    //   });
+    axios
+      .patch(`https://elepsio.herokuapp.com/api/admin/users/${id}`, formData)
+      .then(res => {
+        if (res.status === 200) {
+          alert("Обновлено");
+          history.push("/users");
+        } else {
+          alert("Error Occoured. Try Again");
+        }
+      });
     console.log(formData);
   };
 
@@ -191,6 +206,13 @@ export default function EditCurrentUser() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const onChangeHandler = nameField => e => {
+    let temp = Object.assign({}, formData);
+    temp[nameField] = e.target.value;
+    setFormData(temp);
+  };
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
@@ -249,7 +271,6 @@ export default function EditCurrentUser() {
           <Divider />
           <List>{mainListItems}</List>
           <Divider />
-          {/* <List>{secondaryListItems}</List> */}
         </Drawer>
 
         <main className={classes.content}>
@@ -262,49 +283,60 @@ export default function EditCurrentUser() {
                     <Typography component="h1" variant="h6">
                       Изменить данные пациента
                     </Typography>
+                    {console.log(users)}
+                    <TextField
+                      value={formData.customId}
+                      onChange={onChangeHandler("customId")}
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      name="customId"
+                      label="Индентификатор пользователя"
+                      type="text"
+                      id="customId"
+                      autoComplete="current-customId"
+                    />
 
-                    <MuiPhoneNumber
+                    {/* <MuiPhoneNumber
+                      value={formData.phone}
+                      onChange={onChangeHandler("phone")}
                       defaultCountry={"ua"}
                       variant="outlined"
                       margin="normal"
                       required
                       fullWidth
-                      id="username"
+                      id="phone"
                       label="Имя"
-                      name="username"
-                      autoComplete="username"
+                      name="phone"
+                      autoComplete="phone"
                       autoFocus
-                      onChange={e => setFormData({ ...formData, username: e })}
-                    />
+                    /> */}
+
                     <TextField
-                      onChange={e =>
-                        setFormData({ ...formData, password: e.target.value })
-                      }
+                      value={formData.phone}
+                      onChange={onChangeHandler("phone")}
                       variant="outlined"
                       margin="normal"
-                      required
+                      fullWidth
+                      name="password"
+                      label="Номер телефона "
+                      type="text"
+                      id="password"
+                      autoComplete="current-password"
+                      inputProps={{ maxLength: 12 }}
+                    />
+
+                    <TextField
+                      onChange={onChangeHandler("password")}
+                      variant="outlined"
+                      margin="normal"
                       fullWidth
                       name="password"
                       label="Пароль"
                       type="text"
                       id="password"
                       autoComplete="current-password"
-                      defaultValue="ivanpetrenko2020qE"
-                    />
-                    <TextField
-                      onChange={e =>
-                        setFormData({ ...formData, birthday: e.target.value })
-                      }
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="birthday"
-                      //   label="ФИО"
-                      type="date"
-                      id="birtday"
-                      autoComplete="birthday"
-                      defaultValue="2020-10-09"
+                      inputProps={{ maxLength: 12 }}
                     />
 
                     <Button
@@ -328,4 +360,6 @@ export default function EditCurrentUser() {
       </div>
     </ThemeProvider>
   );
-}
+};
+
+export default EditCurentUser;
