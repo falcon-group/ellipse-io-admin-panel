@@ -164,6 +164,13 @@ const EditCurentUser = props => {
     password: "qwerty221",
   });
 
+  const logoutSession = () => {
+    Cookies.remove("_auth_t", { path: "/" });
+    Cookies.remove("_auth_t_type", { path: "/" });
+    Cookies.remove("_auth_state", { path: "/" });
+    Cookies.remove("_auth_time", { path: "/" });
+    signOut();
+  };
   const [users, setUsers] = React.useState([]);
   const authToken = Cookies.get("_auth_t");
   axios.interceptors.request.use(config => {
@@ -251,7 +258,7 @@ const EditCurentUser = props => {
             <Typography component="h" variant="h8">
               {`${authUser().name}`}
             </Typography>
-            <IconButton color="inherit" onClick={() => signOut()}>
+            <IconButton color="inherit" onClick={() => logoutSession()}>
               <ExitToAppIcon />
             </IconButton>
           </Toolbar>
