@@ -4,7 +4,8 @@ import Alert from "@material-ui/lab/Alert";
 import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { Redirect, useHistory } from "react-router-dom";
 import MuiPhoneNumber from "material-ui-phone-number";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import { lightBlue } from "@material-ui/core/colors";
 import {
   Avatar,
   Button,
@@ -30,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: lightBlue[700],
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -38,6 +39,11 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    background: "#1976d2",
+    color: "#ffffffde",
+    "&:hover": {
+      background: "#1976d2",
+    },
   },
 }));
 
@@ -69,10 +75,6 @@ const Login = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
-  // const downloadHandler = e => {
-  //   e.preventDefault();
-  //   axi
-  // }
   const loginHandler = e => {
     e.preventDefault();
     formData.username = formData.username.replace(/[^0-9]/g, "");
@@ -98,10 +100,6 @@ const Login = () => {
           console.log(res);
         }
       });
-    // .catch(error => {
-    //   // alert("Неверные данные \n" + error);
-    //   setStatusData(false);
-    // });
   };
 
   if (isAuthenticated()) {
@@ -113,7 +111,7 @@ const Login = () => {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <FavoriteBorderIcon />
           </Avatar>
 
           <Typography component="h1" variant="h5">
@@ -193,7 +191,7 @@ const Login = () => {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
+              // color="primary"
               className={classes.submit}
             >
               Войти
