@@ -44,6 +44,7 @@ import { mainListItems } from "../interface/NavList";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import BlockIcon from "@material-ui/icons/Block";
+import Cookies from "js-cookie";
 
 function Copyright() {
   return (
@@ -162,20 +163,18 @@ const DeleteUser = props => {
   const classes = useStyles();
 
   const id = props.match.params.id;
-  //   useEffect(() => {
-  //     // GET request using axios inside useEffect React hook
-  //     axios
 
-  //       .get(
-  //         `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=100&query=34&orderBy=asc`
-  //       )
-  //       .then(result => setNotes(result.data));
-  //   }, []);
-
+  const logoutSession = () => {
+    Cookies.remove("_auth_t", { path: "/" });
+    Cookies.remove("_auth_t_type", { path: "/" });
+    Cookies.remove("_auth_state", { path: "/" });
+    Cookies.remove("_auth_time", { path: "/" });
+    signOut();
+  };
   const deleteHandler = e => {
     e.preventDefault();
     axios
-      .delete(`https://elepsio.herokuapp.com/admin/users/${id}`)
+      .delete(`https://elepsio.herokuapp.com/api/admin/users/${id}`)
 
       .then(res => {
         if (res.status === 200) {
@@ -240,7 +239,7 @@ const DeleteUser = props => {
             <Typography component="h" variant="subtitle2">
               {`${authUser().name}`}
             </Typography>
-            <IconButton color="inherit" onClick={() => signOut()}>
+            <IconButton color="inherit" onClick={() => logoutSession()}>
               <ExitToAppIcon />
             </IconButton>
           </Toolbar>
