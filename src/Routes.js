@@ -31,7 +31,7 @@ const Routes = () => {
           exact
         />
         <PrivateRoute
-          path={"/notes-user/:id"}
+          path={"/notes-user/:customId"}
           component={NotesUser}
           loginPath={"/login"}
           exact
@@ -43,7 +43,7 @@ const Routes = () => {
           exact
         />
         <PrivateRoute
-          path={"/user-info/:id"}
+          path={"/user-info/:customId"}
           component={UserHealthDashboard}
           loginPath={"/login"}
           exact
