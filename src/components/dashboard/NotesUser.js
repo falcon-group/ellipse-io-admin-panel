@@ -3,6 +3,8 @@ import clsx from "clsx";
 import axios from "axios";
 //Auth Kit
 import { useAuthUser, useSignOut } from "react-auth-kit";
+import Cookies from "js-cookie";
+import { useHistory } from "react-router-dom";
 
 //Core MaterialUi
 import {
@@ -27,7 +29,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
-
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 //Colors
 import {
   orange,
@@ -160,22 +162,33 @@ const NotesUser = props => {
     },
   });
   const classes = useStyles();
-  // setTimeout(() => {
-  //   console.log("Hello, World!");
-  // }, 3000);
-  const id = props.match.params.id;
-  useEffect(() => {
-    // GET request using axios inside useEffect React hook
-    axios
 
+  const customId = props.match.params.customId;
+  let history = useHistory();
+
+  const logoutSession = () => {
+    Cookies.remove("_auth_t", { path: "/" });
+    Cookies.remove("_auth_t_type", { path: "/" });
+    Cookies.remove("_auth_state", { path: "/" });
+    Cookies.remove("_auth_time", { path: "/" });
+    signOut();
+  };
+
+  const authToken = Cookies.get("_auth_t");
+  axios.interceptors.request.use(config => {
+    config.headers.authorization = ` ${authToken}`;
+    return config;
+  });
+  useEffect(() => {
+    axios
       .get(
-        `https://elepsio.herokuapp.com/admin/users/${id}?offset=0&count=100&query=34&orderBy=asc`
+        `https://elepsio.herokuapp.com/api/admin/notes?page=1&perPage=4&customUserId=${customId}`
       )
       .then(result => {
-        if (result.data.notes.length === 0) {
+        if (result.data.length === 0) {
           setNotesExist(false);
         } else {
-          setNotes(result.data.notes);
+          setNotes(result.data);
         }
       });
   }, []);
@@ -219,7 +232,7 @@ const NotesUser = props => {
               noWrap
               className={classes.title}
             >
-              Заметки пользователя {id}
+              Заметки пациента: {customId}
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
@@ -229,7 +242,7 @@ const NotesUser = props => {
             <Typography component="h" variant="subtitle2">
               {`${authUser().name}`}
             </Typography>
-            <IconButton color="inherit" onClick={() => signOut()}>
+            <IconButton color="inherit" onClick={() => logoutSession()}>
               <ExitToAppIcon />
             </IconButton>
           </Toolbar>
@@ -254,6 +267,9 @@ const NotesUser = props => {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
+            <IconButton onClick={history.goBack} aria-label="delete">
+              <KeyboardBackspaceIcon />
+            </IconButton>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper className={fixedHeightPaper}>
@@ -271,14 +287,16 @@ const NotesUser = props => {
                             color="textSecondary"
                             gutterBottom
                           >
-                            Дата создания: {notes.createDate}
+                            Дата создания:
+                            {new Date(notes.createDate).toLocaleString()}
                           </Typography>
                           <Typography
                             className={classes.title}
                             color="textSecondary"
                             gutterBottom
                           >
-                            Обновлено: {notes.updateDate}
+                            Обновлено:
+                            {new Date(notes.updateDate).toLocaleString()}
                           </Typography>
 
                           <Typography variant="h5" component="h2">
