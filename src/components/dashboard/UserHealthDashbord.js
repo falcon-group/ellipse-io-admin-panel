@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import clsx from "clsx";
 import axios from "axios";
 //Auth Kit
 import { useAuthUser, useSignOut } from "react-auth-kit";
-
+import TextField from "@material-ui/core/TextField";
+import moment from "moment";
+import Cookies from "js-cookie";
 //Core MaterialUi
 import {
   makeStyles,
@@ -21,12 +23,17 @@ import {
   Grid,
   Paper,
   Link,
+  Button,
 } from "@material-ui/core";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 //Icons
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
+import { Redirect, useHistory } from "react-router-dom";
+import NoteIcon from "@material-ui/icons/Note";
+import SaveIcon from "@material-ui/icons/Save";
 
 //Colors
 import {
@@ -41,6 +48,8 @@ import { mainListItems } from "../interface/NavList";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Chart from "./ChartHealth";
 import BarHealth from "./BarHealth";
+import TableHealth from "./TableHealth";
+import { Link as RouteLink } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -131,13 +140,15 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
   },
   fixedHeight: {
-    height: 240,
+    height: 300,
+    overflow: "hidden",
   },
 }));
 
 const UserHealthDashboard = props => {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
+  const history = useHistory();
   const palletType = darkState ? "dark" : "light";
   const signOut = useSignOut();
   const authUser = useAuthUser();
@@ -156,7 +167,16 @@ const UserHealthDashboard = props => {
   });
   const classes = useStyles();
 
-  const id = props.match.params.id;
+  const customId = props.match.params.customId;
+  let notesLinkId = `/notes-user/${customId}`;
+
+  const logoutSession = () => {
+    Cookies.remove("_auth_t", { path: "/" });
+    Cookies.remove("_auth_t_type", { path: "/" });
+    Cookies.remove("_auth_state", { path: "/" });
+    Cookies.remove("_auth_time", { path: "/" });
+    signOut();
+  };
 
   const handleThemeChange = () => {
     setDarkState(!darkState);
@@ -167,6 +187,22 @@ const UserHealthDashboard = props => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const exportCSV = () => {
+    axios({
+      url: `https://elepsio.herokuapp.com/api/admin/users/${customId}/health_params`, //your url
+      method: "GET",
+      responseType: "blob", // important
+    }).then(response => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Result{${customId}}.xlsx`); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+    });
+  };
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
@@ -197,7 +233,7 @@ const UserHealthDashboard = props => {
               noWrap
               className={classes.title}
             >
-              Состояние пациента
+              Состояние пациента : {customId}
             </Typography>
 
             <Switch checked={darkState} onChange={handleThemeChange} />
@@ -207,7 +243,7 @@ const UserHealthDashboard = props => {
             <Typography component="h" variant="subtitle2">
               {`${authUser().name}`}
             </Typography>
-            <IconButton color="inherit" onClick={() => signOut()}>
+            <IconButton color="inherit" onClick={() => logoutSession()}>
               <ExitToAppIcon />
             </IconButton>
           </Toolbar>
@@ -232,15 +268,83 @@ const UserHealthDashboard = props => {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
+            <ButtonGroup>
+              <Box mr={2}>
+                <RouteLink
+                  to={notesLinkId}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<NoteIcon />}
+                  >
+                    Заметки
+                  </Button>
+                </RouteLink>
+              </Box>
+              {/* <form className={classes.container} noValidate>
+                <TextField
+                  id="datetime-local"
+                  label="Next appointment"
+                  type="datetime-local"
+                  defaultValue="2017-05-24T10:30"
+                  className={classes.textField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  onChange={handleChangeDate}
+                />
+              </form> */}
+              {/* <form className={classes.container} noValidate>
+                <TextField
+                  name="date"
+                  id="date"
+                  label="Date"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  value={date}
+                  onChange={handleChangeDate}
+                  fullWidth
+                  required
+                />
+              </form> */}
+              <Box mr={2}>
+                <Button
+                  onClick={exportCSV}
+                  variant="contained"
+                  color="green"
+                  className={classes.button}
+                  startIcon={<SaveIcon />}
+                  style={{ marginBottom: "20px" }}
+                >
+                  Экспорт
+                </Button>
+              </Box>
+            </ButtonGroup>
+
+            {/* <div>
+              <button onClick={exportCSV}>Export CSV</button>
+            </div> */}
+
             <Grid container spacing={3}>
               <Grid item xs={12} md={12} lg={12}>
                 <Paper className={fixedHeightPaper}>
                   <Chart />
                 </Paper>
               </Grid>
-              <Grid item xs={12} md={4} lg={3}>
+              {/* <Grid item xs={3} md={4} lg={3}>
                 <Paper className={fixedHeightPaper}>
                   <BarHealth />
+                </Paper>
+              </Grid> */}
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <TableHealth />
                 </Paper>
               </Grid>
             </Grid>
