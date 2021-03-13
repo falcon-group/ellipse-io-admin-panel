@@ -151,21 +151,27 @@ export default function Dashboard() {
   const signOut = useSignOut();
   const authUser = useAuthUser();
 
+  const logoutSession = () => {
+    Cookies.remove("_auth_t", { path: "/" });
+    Cookies.remove("_auth_t_type", { path: "/" });
+    Cookies.remove("_auth_state", { path: "/" });
+    Cookies.remove("_auth_time", { path: "/" });
+    signOut();
+  };
+
   const [users, setUsers] = React.useState([]);
 
   const authToken = Cookies.get("_auth_t");
   axios.interceptors.request.use(config => {
-    config.headers.authorization = `Bearer ${authToken}`;
+    config.headers.authorization = ` ${authToken}`;
     return config;
   });
 
   useEffect(() => {
     // GET request using axios inside useEffect React hook
     axios
-      .get(
-        "https://elepsio.herokuapp.com/admin/users?offset=0&count=100&query=34&orderBy=asc"
-      )
-      .then(result => setUsers(result.data.docs));
+      .get("https://elepsio.herokuapp.com/api/admin/users")
+      .then(result => setUsers(result.data));
   }, []);
 
   function ListItemLink(props) {
@@ -236,7 +242,7 @@ export default function Dashboard() {
             <Typography component="h" variant="subtitle2">
               {`${authUser().name}`}
             </Typography>
-            <IconButton color="inherit" onClick={() => signOut()}>
+            <IconButton color="inherit" onClick={() => logoutSession()}>
               <ExitToAppIcon />
             </IconButton>
           </Toolbar>
@@ -276,7 +282,7 @@ export default function Dashboard() {
                 <Paper className={fixedHeightPaper}>
                   <List>
                     {users?.map(user => {
-                      let about = `/user-info/${user._id}`;
+                      let about = `/user-info/${user.customId}`;
                       let del = `/delete-user/${user._id}`;
                       let edit = `/edit-user/${user._id}`;
 
@@ -293,8 +299,8 @@ export default function Dashboard() {
                             </ListItemAvatar>
                             <ListItemText
                               key={user._id}
-                              primary={user.username}
-                              secondary={user.fio}
+                              primary={user.customId}
+                              secondary={user.phone}
                             />
 
                             <RouteLink
