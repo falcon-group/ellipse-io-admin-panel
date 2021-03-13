@@ -42,7 +42,7 @@ import {
 import { mainListItems } from "../interface/NavList";
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-
+import Cookies from "js-cookie";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -159,22 +159,35 @@ export default function AddUser() {
   });
   const classes = useStyles();
   const [formData, setFormData] = React.useState({
-    username: "",
+    phone: "",
+    customId: "",
     password: "",
   });
 
+  const logoutSession = () => {
+    Cookies.remove("_auth_t", { path: "/" });
+    Cookies.remove("_auth_t_type", { path: "/" });
+    Cookies.remove("_auth_state", { path: "/" });
+    Cookies.remove("_auth_time", { path: "/" });
+    signOut();
+  };
+  const authToken = Cookies.get("_auth_t");
+  axios.interceptors.request.use(config => {
+    config.headers.authorization = ` ${authToken}`;
+    return config;
+  });
   const loginHandler = e => {
     e.preventDefault();
-    formData.username = formData.username.replace(/[^0-9]/g, "");
+    formData.phone = formData.phone.replace(/[^0-9]/g, "");
     // Assuming that, all network Request is successfull, and the user is authenticated
     axios
-      .post("https://elepsio.herokuapp.com/auth/register", formData)
+      .post("https://elepsio.herokuapp.com/api/admin/users", formData)
       .then(res => {
         if (res.status === 200) {
           alert("Пользователь добавлен");
           history.push("/users");
         } else {
-          alert("Error Occoured. Try Again");
+          alert("Произошла ошибка");
         }
       });
   };
@@ -227,7 +240,7 @@ export default function AddUser() {
             <Typography component="h" variant="h8">
               {`${authUser().name}`}
             </Typography>
-            <IconButton color="inherit" onClick={() => signOut()}>
+            <IconButton color="inherit" onClick={() => logoutSession()}>
               <ExitToAppIcon />
             </IconButton>
           </Toolbar>
@@ -267,13 +280,28 @@ export default function AddUser() {
                       margin="normal"
                       required
                       fullWidth
-                      id="username"
+                      id="phone"
                       label="Имя"
-                      name="username"
-                      autoComplete="username"
+                      name="phone"
+                      autoComplete="phone"
                       autoFocus
-                      onChange={e => setFormData({ ...formData, username: e })}
+                      onChange={e => setFormData({ ...formData, phone: e })}
                     />
+                    <TextField
+                      onChange={e =>
+                        setFormData({ ...formData, customId: e.target.value })
+                      }
+                      variant="outlined"
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="fio"
+                      label="Введите идентификатор"
+                      type="text"
+                      id="fio"
+                      autoComplete="current-fio"
+                    />
+
                     <TextField
                       onChange={e =>
                         setFormData({ ...formData, password: e.target.value })
