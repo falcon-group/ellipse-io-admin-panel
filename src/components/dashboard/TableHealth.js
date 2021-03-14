@@ -122,7 +122,7 @@ export default function TableHealth() {
     // GET request using axios inside useEffect React hook
     axios
       .get(
-        `https://elepsio.herokuapp.com/api/admin/health_params?page=1&perPage=300&userCustomId=${customId}`
+        `https://elepsio.herokuapp.com/api/admin/health_params?page=1&perPage=1000&userCustomId=${customId}`
       )
       .then(result => setRows(result.data));
   }, []);
@@ -151,6 +151,7 @@ export default function TableHealth() {
           <TableHead>
             <TableRow>
               <TableCell>Время</TableCell>
+              <TableCell>Приступ</TableCell>
               <TableCell>Пульс</TableCell>
             </TableRow>
           </TableHead>
@@ -163,7 +164,19 @@ export default function TableHealth() {
                 <TableCell component="th" scope="row">
                   {new Date(row.createDate).toLocaleString()}
                 </TableCell>
-                <TableCell style={{ width: 160 }}>{row.heartRate}</TableCell>
+                {rows.isUrgent ? (
+                  <TableCell component="th" scope="row">
+                    Да
+                  </TableCell>
+                ) : (
+                  <TableCell component="th" scope="row">
+                    Нет
+                  </TableCell>
+                )}
+
+                <TableCell component="th" scope="row">
+                  {row.heartRate}
+                </TableCell>
               </TableRow>
             ))}
 
