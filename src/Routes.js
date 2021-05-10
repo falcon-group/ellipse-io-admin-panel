@@ -9,6 +9,9 @@ import DeleteUser from "./components/profile/DeleteUser";
 import UserHealthDashboard from "./components/dashboard/UserHealthDashbord";
 import SettingDashboard from "./components/dashboard/SettingDashboard";
 import EditCurrentUser from "./components/profile/EditCurrentUser";
+import ExportHealthParams from "./components/dashboard/ExportHealthParams";
+import DateBetweenChart from "./components/dashboard/DateBetweenChart";
+import DownLoadAPK from "./components/interface/DownLoadAPK";
 const Routes = () => {
   return (
     <BrowserRouter>
@@ -16,7 +19,7 @@ const Routes = () => {
         <Route exact path="/">
           <Redirect to="/login" />
         </Route>
-
+        <Route path={"/download"} component={DownLoadAPK} exact />
         <Route path={"/login"} component={Login} exact />
         <PrivateRoute
           path={"/users"}
@@ -25,39 +28,45 @@ const Routes = () => {
           exact
         />
         <PrivateRoute
-          path={"/add-user"}
+          path={"/user/add"}
           component={AddUser}
           loginPath={"/login"}
           exact
         />
         <PrivateRoute
-          path={"/notes-user/:customId"}
+          path={"/user/:customId/notes"}
           component={NotesUser}
           loginPath={"/login"}
           exact
         />
         <PrivateRoute
-          path={"/delete-user/:id"}
+          path={"/user/:id/delete"}
           component={DeleteUser}
           loginPath={"/login"}
           exact
         />
         <PrivateRoute
-          path={"/user-info/:customId"}
+          path={"/user/:customId"}
           component={UserHealthDashboard}
           loginPath={"/login"}
           exact
         />
 
         <PrivateRoute
-          path={"/setting"}
-          component={SettingDashboard}
+          path={"/user/:customId/export"}
+          component={ExportHealthParams}
           loginPath={"/login"}
           exact
         />
 
         <PrivateRoute
-          path={"/edit-user/:id"}
+          path={"/user/:customId/chart"}
+          component={DateBetweenChart}
+          loginPath={"/login"}
+          exact
+        />
+        <PrivateRoute
+          path={"/user/:id/edit"}
           component={EditCurrentUser}
           loginPath={"/login"}
           exact

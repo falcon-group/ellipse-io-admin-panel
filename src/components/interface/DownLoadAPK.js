@@ -1,12 +1,8 @@
 import React from "react";
-import axios from "axios";
-import Alert from "@material-ui/lab/Alert";
-import { useIsAuthenticated, useSignIn } from "react-auth-kit";
 import { Redirect, useHistory } from "react-router-dom";
-import MuiPhoneNumber from "material-ui-phone-number";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import { lightBlue } from "@material-ui/core/colors";
-import ApkFile from "../../assets/ellipse-alpha.apk";
+import ApkFile from "../../assets/ellipse.apk";
 
 import {
   Avatar,
@@ -16,13 +12,7 @@ import {
   Typography,
   makeStyles,
   Container,
-  IconButton,
-  InputAdornment,
-  Collapse,
 } from "@material-ui/core";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -60,7 +50,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DownLoadAPK = () => {
-  const history = useHistory();
   const classes = useStyles();
 
   return (
@@ -83,8 +72,8 @@ const DownLoadAPK = () => {
         </Typography>
 
         <Button
-          href={ApkFile}
-          download="Ellipse.apk"
+          href="https://drive.google.com/uc?id=1HWeAZmaf_AjdVAZmhzJTuGNyo0l8LwoK&export=download"
+          // download="EllipseV1.apk"
           type="submit"
           fullWidth
           variant="contained"

@@ -34,7 +34,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import { Redirect, useHistory } from "react-router-dom";
 import NoteIcon from "@material-ui/icons/Note";
 import SaveIcon from "@material-ui/icons/Save";
-
+import TimelineIcon from "@material-ui/icons/Timeline";
 //Colors
 import {
   orange,
@@ -168,8 +168,9 @@ const UserHealthDashboard = props => {
   const classes = useStyles();
 
   const customId = props.match.params.customId;
-  let notesLinkId = `/notes-user/${customId}`;
-
+  let notesLinkId = `/user/${customId}/notes`;
+  let exportLinkId = `/user/${customId}/export`;
+  let visualLinkId = `/user/${customId}/chart`;
   const logoutSession = () => {
     Cookies.remove("_auth_t", { path: "/" });
     Cookies.remove("_auth_t_type", { path: "/" });
@@ -188,20 +189,20 @@ const UserHealthDashboard = props => {
     setOpen(false);
   };
 
-  const exportCSV = () => {
-    axios({
-      url: `https://elepsio.herokuapp.com/api/admin/users/${customId}/health_params`, //your url
-      method: "GET",
-      responseType: "blob", // important
-    }).then(response => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `Result{${customId}}.xlsx`); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-    });
-  };
+  // const exportCSV = () => {
+  //   axios({
+  //     url: `https://elepsio.herokuapp.com/api/admin/users/${customId}/health_params`, //your url
+  //     method: "GET",
+  //     responseType: "blob", // important
+  //   }).then(response => {
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", `Result{${customId}}.xlsx`); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //   });
+  // };
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -287,43 +288,45 @@ const UserHealthDashboard = props => {
                   </Button>
                 </RouteLink>
               </Box>
-              {/* <form className={classes.container} noValidate>
-                <TextField
-                  id="datetime-local"
-                  label="Next appointment"
-                  type="datetime-local"
-                  defaultValue="2017-05-24T10:30"
-                  className={classes.textField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  onChange={handleChangeDate}
-                />
-              </form> */}
-              {/* <form className={classes.container} noValidate>
-                <TextField
-                  name="date"
-                  id="date"
-                  label="Date"
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                  value={date}
-                  onChange={handleChangeDate}
-                  fullWidth
-                  required
-                />
-              </form> */}
+
               <Box mr={2}>
-                <Button
-                  onClick={exportCSV}
-                  variant="contained"
-                  color="green"
-                  className={classes.button}
-                  startIcon={<SaveIcon />}
-                  style={{ marginBottom: "20px" }}
+                <RouteLink
+                  to={exportLinkId}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
                 >
-                  Экспорт
-                </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<SaveIcon />}
+                    style={{ marginBottom: "20px" }}
+                  >
+                    Экспорт
+                  </Button>
+                </RouteLink>
+              </Box>
+
+              <Box mr={2}>
+                <RouteLink
+                  to={visualLinkId}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<TimelineIcon />}
+                    style={{ marginBottom: "20px" }}
+                  >
+                    Инфографика
+                  </Button>
+                </RouteLink>
               </Box>
             </ButtonGroup>
 

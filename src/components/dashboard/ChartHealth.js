@@ -21,10 +21,18 @@ import { lightBlue } from "@material-ui/core/colors";
 
 class CustomizedLabel extends PureComponent {
   render() {
-    const { x, y, stroke, value } = this.props;
+    const { x, y, stroke, value, COLORS, barData } = this.props;
 
     return (
-      <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
+      <text
+        x={x}
+        y={y}
+        dy={-4}
+        // fill={barData[barData.length - 1].isUrgent ? "#c40000" : "#0088FE"}
+        fill={stroke}
+        fontSize={10}
+        textAnchor="middle"
+      >
         {value}
       </text>
     );
@@ -32,7 +40,6 @@ class CustomizedLabel extends PureComponent {
 }
 export default function Chart() {
   const theme = useTheme();
-  // const adminSocket = useRef(null);
   const [checkUndefined, setSatusCheck] = React.useState(false);
 
   const [barData, setBarData] = useState([]);
@@ -52,15 +59,10 @@ export default function Chart() {
     });
 
     adminSocket.on("params", msg => {
-      // console.log(JSON.stringify(msg));
       let temp = [...barData, msg];
       if (temp.length > 40) temp = temp.slice(1);
-      // console.log("xyu", temp.pop);
       setBarData(temp);
       setSatusCheck(true);
-      // console.log(temp.lenghth - 1);
-      // console.log(barData[barData.length - 1].heartRate);
-      // console.log(b);
     });
 
     return () => {
@@ -70,13 +72,6 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      {/* {!checkUndefined ? (
-        <Grid container direction="row" alignItems="center">
-          <FavoriteIcon style={{ color: lightBlue[700] }} fontSize="small" />{" "}
-          Сердечный ритм : {barData[barData.length - 1].heartRate}
-          21
-        </Grid>
-      ) : null} */}
       <ResponsiveContainer width="95%" height={100}>
         <Grid container direction="row" alignItems="center">
           <Title>График</Title>

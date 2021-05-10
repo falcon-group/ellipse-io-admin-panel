@@ -22,7 +22,25 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { ruRU } from "@material-ui/core/locale";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import {
+  CssBaseline,
+  Switch,
+  Drawer,
+  Box,
+  AppBar,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  Container,
+  Grid,
+  Link,
+  Button,
+} from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import CachedIcon from "@material-ui/icons/Cached";
 const theme = createMuiTheme({}, ruRU);
 const useStyles1 = makeStyles(theme => ({
   root: {
@@ -108,23 +126,35 @@ const useStyles2 = makeStyles({
 
 export default function TableHealth() {
   const [rows, setRows] = React.useState([]);
-
+  const [isLoading, setLoadigRows] = React.useState(true);
   const { customId } = useParams();
   // console.log(customId);
+  const [existRows, setExistRows] = React.useState(true);
 
   const authToken = Cookies.get("_auth_t");
   axios.interceptors.request.use(config => {
     config.headers.authorization = ` ${authToken}`;
     return config;
   });
-
-  useEffect(() => {
+  const getDataCurrentUser = () => {
     // GET request using axios inside useEffect React hook
     axios
       .get(
-        `https://elepsio.herokuapp.com/api/admin/health_params?page=1&perPage=1000&userCustomId=${customId}`
+        `https://elepsio.herokuapp.com/api/admin/health_params?page=1&perPage=300000&userCustomId=${customId}`
       )
-      .then(result => setRows(result.data));
+      // .then(result => setRows(result.data));
+      .then(result => {
+        if (result.data.length === 0) {
+          setExistRows(false);
+        } else {
+          setLoadigRows(false);
+          setRows(result.data);
+        }
+      });
+  };
+  useEffect(() => {
+    // GET request using axios inside useEffect React hook
+    getDataCurrentUser();
   }, []);
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
@@ -146,15 +176,33 @@ export default function TableHealth() {
     <React.Fragment>
       <Title>История здоровья</Title>
 
+      {isLoading ? (
+        <CircularProgress size={30} />
+      ) : (
+        <ButtonGroup>
+          <Box mr={2}>
+            <IconButton
+              onClick={getDataCurrentUser}
+              color="primary"
+              aria-label="update"
+              style={{ marginLeft: "-10px" }}
+            >
+              <CachedIcon />
+            </IconButton>
+          </Box>
+        </ButtonGroup>
+      )}
       <TableContainer>
         <Table className={classes.table} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Время</TableCell>
-              <TableCell>Приступ</TableCell>
-              <TableCell>Пульс</TableCell>
-            </TableRow>
-          </TableHead>
+          {isLoading ? null : (
+            <TableHead>
+              <TableRow>
+                <TableCell>Время</TableCell>
+                <TableCell>Приступ</TableCell>
+                <TableCell>Пульс</TableCell>
+              </TableRow>
+            </TableHead>
+          )}
           <TableBody>
             {(rowsPerPage > 0
               ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -164,15 +212,10 @@ export default function TableHealth() {
                 <TableCell component="th" scope="row">
                   {new Date(row.createDate).toLocaleString()}
                 </TableCell>
-                {rows.isUrgent ? (
-                  <TableCell component="th" scope="row">
-                    Да
-                  </TableCell>
-                ) : (
-                  <TableCell component="th" scope="row">
-                    Нет
-                  </TableCell>
-                )}
+
+                <TableCell component="th" scope="row">
+                  {row.isUrgent ? "Да" : "Нет"}
+                </TableCell>
 
                 <TableCell component="th" scope="row">
                   {row.heartRate}

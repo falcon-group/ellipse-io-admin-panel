@@ -290,6 +290,7 @@ const DeleteUser = props => {
                     </Box>
                     <Box>
                       <Button
+                        onClick={history.goBack}
                         variant="contained"
                         color="inherit"
                         className={classes.button}

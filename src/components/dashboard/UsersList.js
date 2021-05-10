@@ -49,6 +49,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { useEffect } from "react";
 import { Link as RouteLink } from "react-router-dom";
 import Cookies from "js-cookie";
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -271,7 +272,7 @@ export default function Dashboard() {
               size="medium"
               variant="contained"
               color="primary"
-              href="/add-user "
+              href="/user/add "
               style={{ marginBottom: "20px" }}
               startIcon={<PersonAddIcon />}
             >
@@ -282,9 +283,9 @@ export default function Dashboard() {
                 <Paper className={fixedHeightPaper}>
                   <List>
                     {users?.map(user => {
-                      let about = `/user-info/${user.customId}`;
-                      let del = `/delete-user/${user._id}`;
-                      let edit = `/edit-user/${user._id}`;
+                      let about = `/user/${user.customId}`;
+                      let del = `/user/${user._id}/delete`;
+                      let edit = `/user/${user._id}/edit`;
 
                       return (
                         <RouteLink

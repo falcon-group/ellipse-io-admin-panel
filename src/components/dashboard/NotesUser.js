@@ -267,7 +267,7 @@ const NotesUser = props => {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
-            <IconButton onClick={history.goBack} aria-label="delete">
+            <IconButton onClick={history.goBack} aria-label="back">
               <KeyboardBackspaceIcon />
             </IconButton>
             <Grid container spacing={3}>
